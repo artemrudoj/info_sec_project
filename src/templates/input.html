@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{%  block content %}
+
+<textarea class="form-control" rows="10"></textarea>
+<hr>
+<label class="radio-inline">
+  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Русский
+</label>
+<label class="radio-inline">
+  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> English
+</label>
+<label class="radio-inline">
+  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> France
+</label>
+<a href="{% url 'result'%}" class="btn btn-primary" role="button">Decript!</a>
+{%  endblock %}

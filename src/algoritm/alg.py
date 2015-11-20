@@ -195,30 +195,42 @@ def secondPopularLettersWord(text, map, requiredLetters, englishLetters):
 
 
 def translateConfirmWords(confirmWords, map, requiredLetters, englishLetters):
+    max = 0
+    maxNewMap = []
     for p in itertools.permutations(englishLetters):
         m = zip(requiredLetters,p)
         newMap = fromListToMap(m)
         newMap.update(map)
-        translatedWords = checkAndTranslateWords(confirmWords, newMap)
-        if translatedWords is not None:
-            print "asasd"
-            print translatedWords
-            break
-        else:
-            continue
-    return newMap
+      #   translatedWords = getCountOfTranslatedWords(confirmWords, newMap)
+      #   if translatedWords is not None:
+      #       print "asasd"
+      #       print translatedWords
+      #       break
+      #   else:
+      #       continue
+        tmp = getCountOfTranslatedWords(confirmWords, newMap)
+        if tmp > max :
+            max = tmp
+            maxNewMap = newMap
+    print "max = " + str(max)
+    return maxNewMap
 
 
 def isCorrectWordWithRequired(word, arrayOfLetters, requiredLetters):
-    isHaveRequredLetters = False
+    HaveRequredLettersCount = 0
+    if (len(word) > 4):
+        return False
     for letter in word:
         if letter in arrayOfLetters:
             if letter in requiredLetters:
-                isHaveRequredLetters = True
+                HaveRequredLettersCount = HaveRequredLettersCount + 1
             continue
         else:
             return False
-    return isHaveRequredLetters
+    if (HaveRequredLettersCount >= 2):
+        return True
+    else:
+        return False
 
 
 def checkFullnessOfLettersArray(newLettersRate, confirmWords):
@@ -255,8 +267,18 @@ def checkAndTranslateWords(words, newMap):
 
     return translatedWords
 
+def getCountOfTranslatedWords(words, newMap):
+    i = 0
+    translatedWords = []
+    for word in words:
+        newWord = word.translate(newMap)
+        if d.check(newWord):
+            translatedWords.append(newWord)
+            i = i + 1
+        else:
+            continue
 
-
+    return i
 
 def isCorrectWord(word, letters):
     for letter in word:

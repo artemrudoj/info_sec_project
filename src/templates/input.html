@@ -2,16 +2,25 @@
 
 {%  block content %}
 
-<textarea class="form-control" rows="10"></textarea>
+<form action="{% url 'result'%}" method="post">
+  {% csrf_token %}
+    <label for="your_name">Введите текст:</label>
+    <textarea id="your_name" type="text" name="text" class="form-control" rows="10"></textarea>
+    {% for error in form.text.errors %}
+    <span class="alert alert-error">{{ error }}</span>
+{% endfor %}
+  <hr>
+  <label class="radio-inline">
+      <input type="radio" name="lang" id="inlineRadio1" value="0" checked> Русский
+  </label>
+  <label class="radio-inline">
+      <input type="radio" name="lang" id="inlineRadio2" value="1"> English
+  </label>
+  <label class="radio-inline">
+      <input type="radio" name="lang" id="inlineRadio3" value="2"> France
+  </label>
+  <input type="submit" class="btn btn-primary" value="Расшифровать!">
+</form>
 <hr>
-<label class="radio-inline">
-  <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Русский
-</label>
-<label class="radio-inline">
-  <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> English
-</label>
-<label class="radio-inline">
-  <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> France
-</label>
-<a href="{% url 'result'%}" class="btn btn-primary" role="button">Decript!</a>
+
 {%  endblock %}

@@ -16,10 +16,10 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from decriptor.views import HomePage
-from decriptor.views import ResultPage
+from decriptor.views import get_text
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', HomePage.as_view(), name='home'),
-    url(r'^decripted/$', ResultPage.as_view(), name='result'),
+    url(r'^decripted/$', get_text, name='result'),
 ]

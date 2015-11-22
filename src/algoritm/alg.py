@@ -153,6 +153,9 @@ class Decoder:
                     if not word[i] in self.mappings[self.currentIndex % self.keyLen]:
                         isCorrect = False
                 self.currentIndex = self.currentIndex + 1
+            else:
+                isCorrect = False
+                break
         if isCorrect:
             self.confirmWords.update({word :tmp})
             return True
@@ -160,73 +163,88 @@ class Decoder:
             return False
 
     #вот тут нужно переделать
-    def generateMappingFunctions(self):
-        j = 0
-        #чисто по приколу создаю вот столько вариантов словарей
-        COUNT_OF_VARIANRS = 2
-        self.mappingsFunction = []
-        for i in range(self.keyLen):
-            self.mappingsFunction.append([])
-            for p in itertools.permutations(self.newInglishLetter):
-                map = zip(self.mappings[i],p)
-                newMap = fromListToMap(map)
-                self.mappingsFunction[i].append(newMap)
-                if j >= COUNT_OF_VARIANRS:
-                    break
-                else:
-                    j = j + 1
-            j = 0
-        print self.mappingsFunction[1]
-        print "Mapping functions have been generated"
+
 
     #нужно сделать поумнее
     def decodeConfirmWords(self):
         countOfDecodeWords = 0
         countOfTryedWords = 0
-        itrerator = BossOfAllIterators(self.keyLen, len(self.mappingsFunction[0]))
+        bijection = BijectionOfAlphabet(keyLen, self.newInglishLetter, self.mappings)
+        print self.confirmWords
         while(True):
-            arrayOfIndexs = itrerator.iterate()
-            print arrayOfIndexs
-            if (arrayOfIndexs == None):
+
+            mappingFunctions = bijection.generateMappingFunctions()
+            if (mappingFunctions == None):
                 break
             for word, position in self.confirmWords.iteritems():
-                decodedWord = self.decodeWord(word, position, arrayOfIndexs)
+                decodedWord = self.decodeWord(word, position, mappingFunctions)
                 if self.checkWord(decodedWord):
                     countOfDecodeWords = countOfDecodeWords + 1
                 countOfTryedWords = countOfTryedWords + 1
                 if self.isShouldStop(countOfDecodeWords, countOfTryedWords):
+                    print "EXIT"
                     break
+            countOfTryedWords = 0
+            countOfDecodeWords = 0
 
 
     def isShouldStop(self, countOfDecodeWords, countOfTryedWords):
         countOfAllWords = len(self.confirmWords)
+        rate = float(countOfTryedWords)/float(countOfAllWords)
         # Нужно подгонять эти штуки
-        if (float(countOfTryedWords)/float(countOfAllWords)) < 0.1:
+        if (rate) < 0.3:
             return False
         else:
-            if (float(countOfDecodeWords)/float(countOfTryedWords)) < 0.1:
+            rate = float(countOfDecodeWords)/float(countOfTryedWords)
+            print rate
+            if (rate) < 0.5:
+                return True
+            elif (rate) > 0.7:
                 return True
             else:
                 return False
 
 
-    def decodeWord(self, word, position, mappingNumber):
+    def decodeWord(self, word, position, bijection):
         decodeWord = ""
         for letter in word:
             #получаю нужную букву из нужного столбца преобразования
             index = position % self.keyLen
-            indexInMappingFuc = mappingNumber[index]
-            print self.mappingsFunction[index][indexInMappingFuc]
-            decodeLetter = self.mappingsFunction[index][indexInMappingFuc].get(ord(letter))
-            print decodeLetter
+            decodeLetter = bijection[index].get(ord(letter))
             decodeWord = decodeWord + decodeLetter
             position = position + 1
-        print "old word " + word
-        print "decode word " + decodeWord
         return decodeWord
 
     def checkWord(self, word):
-        return d.check(word)
+        if d.check(word):
+            print word
+            return True
+        return False
+class BijectionOfAlphabet:
+    keyLen = 0
+    currentStateOfAllMappingFunctions = []
+    iterator = []
+    allCombinationOfEnglishLetters = []
+    mappings = []
+    def __init__(self, keyLen, englishLetters, mappings):
+        self.keyLen = keyLen
+        self.allCombinationOfEnglishLetters = list(itertools.permutations(englishLetters))
+        #чтобы охватить все комбинации тут нужно что-нибудь придумать!!! а то дофига раз придется итерироваться
+        self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
+        self.mappings = mappings
+        for i in range(self.keyLen):
+            self.currentStateOfAllMappingFunctions.append([])
+        print "Bijection vreated"
+
+    def generateMappingFunctions(self):
+        arrayOfIndexes = self.iterator.indexesForMappingFunction
+        if (arrayOfIndexes == None):
+            return None
+        for i in range(self.keyLen):
+            map = zip(self.mappings[i], self.allCombinationOfEnglishLetters[arrayOfIndexes[i]])
+            self.currentStateOfAllMappingFunctions[i] = fromListToMap(map)
+        self.iterator.iterate()
+        return self.currentStateOfAllMappingFunctions
 
 class BossOfAllIterators:
     indexesForMappingFunction = []
@@ -238,11 +256,12 @@ class BossOfAllIterators:
         self.arrayLengths = arrayLength
     #итерируемся начиная из самого последнего массива
     def iterate(self):
-        if (self.indexesForMappingFunction[self.keyLen - 1] == self.arrayLengths):
+        print self.indexesForMappingFunction
+        if (self.indexesForMappingFunction[self.keyLen - 1] == (self.arrayLengths - 1)):
             return None
         self.indexesForMappingFunction[0] = self.indexesForMappingFunction[0] + 1
-        for i in range(self.keyLen - 2):
-            if self.indexesForMappingFunction[i] == self.arrayLengths:
+        for i in range(self.keyLen):
+            if self.indexesForMappingFunction[i] == self.arrayLengths - 1:
                 self.indexesForMappingFunction[i + 1] = self.indexesForMappingFunction[i + 1] + 1
                 self.indexesForMappingFunction[i] = 0
         return self.indexesForMappingFunction
@@ -258,7 +277,6 @@ def wordsFromMostPopularLetter(text, lettersRate, begin, end, keyLen):
     wordGenerator = Decoder(shortArrayOfLetters, keyLen, newInglishLetter)
     for word in text.split():
         wordGenerator.isCorrectWord(word)
-    wordGenerator.generateMappingFunctions()
     wordGenerator.decodeConfirmWords()
 
 
@@ -439,7 +457,7 @@ if __name__ == '__main__':
          if pattern.match(cipher[i]):
              cipherLetters += cipher[i]
     # !!!!!!!!!!!!!! epta
-    keyLen = 2
+    keyLen = 1
 
     # keyLen not always good
     frequencyAnalysis(cipher4, keyLen)

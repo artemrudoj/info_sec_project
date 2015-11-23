@@ -125,10 +125,10 @@ def frequencyAnalysis(cipher, keyLen):
     firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
 
     # secondPartOfMappingFunctions = secondPopularLettersWord(cipher, firstPartOfMappingFunctions, arrayOfletters, 11, 20, usualEnglishLettersRate[11:20], keyLen)
-
-    # print secondPartOfMappingFunctions
+    #
+    # # print secondPartOfMappingFunctions
     # for i in range(keyLen):
-    #      firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
+    #       firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
     print firstPartOfMappingFunctions
     chiper1 = decodeText(cipher, firstPartOfMappingFunctions,keyLen)
     print chiper1
@@ -198,30 +198,54 @@ class Decoder:
     #функция проверяет на корректность слова, под корректностью подразумевается, что оно полностью состоит из букв, а также все его букрвы лежат в диапозоне mappings[keylen]
     #если слово корректное - оно добавляется в словарь confirmWords, где value - индекс первой буквы слова в тексте, нужно знать чтобы потом правильно заменять букрвы в слове
     #иожно пределать чтобы несколько букв из обязаталеьных должно было быть
+    # def isCorrectWord(self, word, additionalsLetters):
+    #     isCorrect = True
+    #     tmp = self.currentIndex
+    #     for i in range(word.__len__()):
+    #         if ord(word[i]) in range(ord('A'), ord('Z') + 1, 1):
+    #             if isCorrect :
+    #                 if not word[i] in self.mappings[self.currentIndex % self.keyLen]:
+    #                     if additionalsLetters == None:
+    #                         isCorrect = False
+    #                     elif not ord(word[i]) in additionalsLetters[self.currentIndex % self.keyLen].keys():
+    #                             isCorrect = False
+    #             #чтобы правильно итерироваться по тексту
+    #             self.currentIndex = self.currentIndex + 1
+    #         else:
+    #             isCorrect = False
+    #             break
+    #     if isCorrect:
+    #         self.confirmWords.update({word:tmp})
+    #         return True
+    #     else:
+    #         return False
+
+    #вот тут нужно переделать
     def isCorrectWord(self, word, additionalsLetters):
-        isCorrect = True
         tmp = self.currentIndex
+        countAdditionalLetters = 0
+        isOneLetterFromRequired = False
+        isCorrect = True
+        minRequredLetters = 3
         for i in range(word.__len__()):
             if ord(word[i]) in range(ord('A'), ord('Z') + 1, 1):
-                if isCorrect :
-                    if not word[i] in self.mappings[self.currentIndex % self.keyLen]:
-                        if additionalsLetters == None:
-                            isCorrect = False
-                        elif not ord(word[i]) in additionalsLetters[self.currentIndex % self.keyLen].keys():
-                                isCorrect = False
-                #чтобы правильно итерироваться по тексту
+                if isCorrect:
+                    if word[i] in self.mappings[self.currentIndex % self.keyLen]:
+                        countAdditionalLetters = countAdditionalLetters + 1
+                        if countAdditionalLetters > minRequredLetters:
+                            isOneLetterFromRequired = True
+                    else :
+                        isCorrect = False
+                    if ord(word[i]) in additionalsLetters[self.currentIndex % self.keyLen].keys():
+                        isCorrect = True
                 self.currentIndex = self.currentIndex + 1
             else:
                 isCorrect = False
-                break
-        if isCorrect:
+        if isCorrect and isOneLetterFromRequired:
             self.confirmWords.update({word:tmp})
             return True
         else:
             return False
-
-    #вот тут нужно переделать
-
 
     #нужно сделать поумнее
     def decodeConfirmWords(self):
@@ -229,9 +253,10 @@ class Decoder:
         countOfTryedWords = 0
         bijection = BijectionOfAlphabet(keyLen, self.newInglishLetter, self.mappings, self.alreadyKnowingLetters)
         print "count of confirm words: " + str(len(self.confirmWords))
+        print self.confirmWords
         while(True):
             mappingFunctions = bijection.generateMappingFunctions()
-            if (mappingFunctions == None):
+            if (bijection.iterator.isFinished == True):
                 break
             for word, position in self.confirmWords.iteritems():
                 decodedWord = self.decodeWord(word, position, mappingFunctions)
@@ -247,6 +272,7 @@ class Decoder:
                     return mappingFunctions
             countOfTryedWords = 0
             countOfDecodeWords = 0
+        return mappingFunctions
 
 
     def isShouldStop(self, countOfDecodeWords, countOfTryedWords):
@@ -294,7 +320,8 @@ class BijectionOfAlphabet:
         self.keyLen = keyLen
         self.allCombinationOfEnglishLetters = list(itertools.permutations(englishLetters))
         #чтобы охватить все комбинации тут нужно что-нибудь придумать!!! а то дофига раз придется итерироваться
-        self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
+        # self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
+        self.iterator = BossOfAllIterators(keyLen, 100)
         self.mappings = mappings
         self.alreadyKnowingLetters = alreadyKnowingLetters
 
@@ -304,8 +331,8 @@ class BijectionOfAlphabet:
 
     def generateMappingFunctions(self):
         arrayOfIndexes = self.iterator.indexesForMappingFunction
-        if (arrayOfIndexes == None):
-            return None
+        if (self.iterator.isFinished == True):
+            return self.currentStateOfAllMappingFunctions
         for i in range(self.keyLen):
             map = zip(self.mappings[i], self.allCombinationOfEnglishLetters[arrayOfIndexes[i]])
             self.currentStateOfAllMappingFunctions[i] = fromListToMap(map)
@@ -318,6 +345,7 @@ class BossOfAllIterators:
     indexesForMappingFunction = []
     keyLen = 0
     arrayLengths = 0
+    isFinished = False
     def __init__(self, keyLen, arrayLength):
         self.keyLen = keyLen
         self.indexesForMappingFunction = [0]*self.keyLen
@@ -325,9 +353,10 @@ class BossOfAllIterators:
     #итерируемся начиная из самого последнего массива
     def iterate(self):
         if (self.indexesForMappingFunction[self.keyLen - 1] == (self.arrayLengths - 1)):
+            self.isFinished = True
             return None
         self.indexesForMappingFunction[0] = self.indexesForMappingFunction[0] + 1
-        for i in range(self.keyLen):
+        for i in range(self.keyLen - 1):
             if self.indexesForMappingFunction[i] == self.arrayLengths - 1:
                 self.indexesForMappingFunction[i + 1] = self.indexesForMappingFunction[i + 1] + 1
                 self.indexesForMappingFunction[i] = 0
@@ -464,9 +493,10 @@ if __name__ == '__main__':
          if pattern.match(cipher[i]):
              cipherLetters += cipher[i]
     # !!!!!!!!!!!!!! epta
-    keyLen = 1
+    keyLen = 2
 
     # keyLen not always good
     frequencyAnalysis(cipher4, keyLen)
+    print cipher4
     print sourceTextForCipher4
 

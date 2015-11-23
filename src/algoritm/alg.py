@@ -121,12 +121,63 @@ def frequencyAnalysis(cipher, keyLen):
     print "qdqd"
     print(arrayOfletters)
 
-    words = wordsFromMostPopularLetter(cipher, arrayOfletters, 0, 11, keyLen)
-    #newMap = secondPopularLettersWord(cipher, words, arrayOfletters, 11, 20, usualEnglishLettersRate[11:20], keyLen)
-    #cipher1 = cipher.translate(newMap)
-    print cipher1
-    return cipher1
+    #считаем , что букву е мы знаем
+    firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
 
+    # secondPartOfMappingFunctions = secondPopularLettersWord(cipher, firstPartOfMappingFunctions, arrayOfletters, 11, 20, usualEnglishLettersRate[11:20], keyLen)
+
+    # print secondPartOfMappingFunctions
+    # for i in range(keyLen):
+    #      firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
+    print firstPartOfMappingFunctions
+    chiper1 = decodeText(cipher, firstPartOfMappingFunctions,keyLen)
+    print chiper1
+    return chiper1
+
+
+def decodeText(text, mappingFunctions,  keyLen):
+    indexInText = 0
+    indexInMappers = 0
+    newText = ""
+    for i in range(text.__len__()):
+        if ord(text[i]) in range(ord('A'), ord('Z') + 1, 1):
+            index = ord(text[i])
+            a = mappingFunctions[indexInMappers % keyLen].get(index)
+            if (a == None):
+                a = text[i]
+            indexInMappers = indexInMappers + 1
+            newText = newText + a
+            indexInText + 1
+        else:
+            newText = newText + text[i]
+            indexInText + 1
+    return newText
+
+
+def wordsFromMostPopularLetter(text, lettersRate, begin, end, keyLen):
+    shortArrayOfLetters = []
+    forLetterE = []
+    for j in range(keyLen):
+        shortArrayOfLetters.append(lettersRate[j][begin:end])
+        forLetterE.append({ord(lettersRate[j][0]):u"E"})
+    print forLetterE
+    print "Cutted version of letters arrays"
+    print shortArrayOfLetters
+    newInglishLetter = usualEnglishLettersRate[begin:end]
+    decoder = Decoder(shortArrayOfLetters, keyLen, newInglishLetter, forLetterE)
+    for word in text.split():
+        decoder.isCorrectWord(word, forLetterE)
+    return  decoder.decodeConfirmWords()
+
+def secondPopularLettersWord(text, alreadyknowingMapping, arrayOfletters, begin, end, englishLetters, keyLen):
+    shortArrayOfLetters = []
+    forLetterE = []
+    for j in range(keyLen):
+        shortArrayOfLetters.append(arrayOfletters[j][begin:end])
+    decoder = Decoder(shortArrayOfLetters, keyLen, englishLetters, alreadyknowingMapping)
+    for word in text.split():
+        decoder.isCorrectWord(word, alreadyknowingMapping)
+    return  decoder.decodeConfirmWords()
 
 class Decoder:
     newInglishLetter = []
@@ -135,29 +186,36 @@ class Decoder:
     mappings = []
     confirmWords = []
     currentIndex = 0
-    def __init__(self, shortArrayOfLetters, keyLen, newInglishLetter):
+    alreadyKnowingLetters = []
+    correctMapFunction = []
+    def __init__(self, shortArrayOfLetters, keyLen, newInglishLetter, alreadyKnowingLetters):
         self.currentIndex = 0
         self.mappings = shortArrayOfLetters
         self.confirmWords = {}
         self.keyLen = keyLen
         self.newInglishLetter = newInglishLetter
-
+        self.alreadyKnowingLetters = alreadyKnowingLetters
     #функция проверяет на корректность слова, под корректностью подразумевается, что оно полностью состоит из букв, а также все его букрвы лежат в диапозоне mappings[keylen]
     #если слово корректное - оно добавляется в словарь confirmWords, где value - индекс первой буквы слова в тексте, нужно знать чтобы потом правильно заменять букрвы в слове
-    def isCorrectWord(self, word):
+    #иожно пределать чтобы несколько букв из обязаталеьных должно было быть
+    def isCorrectWord(self, word, additionalsLetters):
         isCorrect = True
         tmp = self.currentIndex
         for i in range(word.__len__()):
             if ord(word[i]) in range(ord('A'), ord('Z') + 1, 1):
                 if isCorrect :
                     if not word[i] in self.mappings[self.currentIndex % self.keyLen]:
-                        isCorrect = False
+                        if additionalsLetters == None:
+                            isCorrect = False
+                        elif not ord(word[i]) in additionalsLetters[self.currentIndex % self.keyLen].keys():
+                                isCorrect = False
+                #чтобы правильно итерироваться по тексту
                 self.currentIndex = self.currentIndex + 1
             else:
                 isCorrect = False
                 break
         if isCorrect:
-            self.confirmWords.update({word :tmp})
+            self.confirmWords.update({word:tmp})
             return True
         else:
             return False
@@ -169,10 +227,9 @@ class Decoder:
     def decodeConfirmWords(self):
         countOfDecodeWords = 0
         countOfTryedWords = 0
-        bijection = BijectionOfAlphabet(keyLen, self.newInglishLetter, self.mappings)
-        print self.confirmWords
+        bijection = BijectionOfAlphabet(keyLen, self.newInglishLetter, self.mappings, self.alreadyKnowingLetters)
+        print "count of confirm words: " + str(len(self.confirmWords))
         while(True):
-
             mappingFunctions = bijection.generateMappingFunctions()
             if (mappingFunctions == None):
                 break
@@ -181,9 +238,13 @@ class Decoder:
                 if self.checkWord(decodedWord):
                     countOfDecodeWords = countOfDecodeWords + 1
                 countOfTryedWords = countOfTryedWords + 1
-                if self.isShouldStop(countOfDecodeWords, countOfTryedWords):
-                    print "EXIT"
+                ret = self.isShouldStop(countOfDecodeWords, countOfTryedWords)
+                if (ret == 0):
                     break
+                elif (ret == 1):
+                    print bijection.iterator.indexesForMappingFunction
+                    self.correctMapFunction = bijection.iterator.indexesForMappingFunction
+                    return mappingFunctions
             countOfTryedWords = 0
             countOfDecodeWords = 0
 
@@ -193,16 +254,17 @@ class Decoder:
         rate = float(countOfTryedWords)/float(countOfAllWords)
         # Нужно подгонять эти штуки
         if (rate) < 0.3:
-            return False
+            return -1
         else:
             rate = float(countOfDecodeWords)/float(countOfTryedWords)
-            print rate
             if (rate) < 0.5:
-                return True
-            elif (rate) > 0.7:
-                return True
+                return 0
+            elif (rate) > 0.9:
+                print rate
+                print self.confirmWords
+                return 1
             else:
-                return False
+                return -1
 
 
     def decodeWord(self, word, position, bijection):
@@ -217,23 +279,27 @@ class Decoder:
 
     def checkWord(self, word):
         if d.check(word):
-            print word
             return True
         return False
+
 class BijectionOfAlphabet:
     keyLen = 0
     currentStateOfAllMappingFunctions = []
     iterator = []
     allCombinationOfEnglishLetters = []
     mappings = []
-    def __init__(self, keyLen, englishLetters, mappings):
+    alreadyKnowingLetters = []
+    def __init__(self, keyLen, englishLetters, mappings, alreadyKnowingLetters):
+        self.currentStateOfAllMappingFunctions = [None] * keyLen
         self.keyLen = keyLen
         self.allCombinationOfEnglishLetters = list(itertools.permutations(englishLetters))
         #чтобы охватить все комбинации тут нужно что-нибудь придумать!!! а то дофига раз придется итерироваться
         self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
         self.mappings = mappings
-        for i in range(self.keyLen):
-            self.currentStateOfAllMappingFunctions.append([])
+        self.alreadyKnowingLetters = alreadyKnowingLetters
+
+        print "in BijectionOfAlphabet alreadyKnowingLetters" + str(alreadyKnowingLetters)
+        print "in BijectionOfAlphabet " + str(self.alreadyKnowingLetters)
         print "Bijection vreated"
 
     def generateMappingFunctions(self):
@@ -243,6 +309,8 @@ class BijectionOfAlphabet:
         for i in range(self.keyLen):
             map = zip(self.mappings[i], self.allCombinationOfEnglishLetters[arrayOfIndexes[i]])
             self.currentStateOfAllMappingFunctions[i] = fromListToMap(map)
+            if (self.alreadyKnowingLetters != None):
+                self.currentStateOfAllMappingFunctions[i].update(self.alreadyKnowingLetters[i])
         self.iterator.iterate()
         return self.currentStateOfAllMappingFunctions
 
@@ -256,7 +324,6 @@ class BossOfAllIterators:
         self.arrayLengths = arrayLength
     #итерируемся начиная из самого последнего массива
     def iterate(self):
-        print self.indexesForMappingFunction
         if (self.indexesForMappingFunction[self.keyLen - 1] == (self.arrayLengths - 1)):
             return None
         self.indexesForMappingFunction[0] = self.indexesForMappingFunction[0] + 1
@@ -265,66 +332,6 @@ class BossOfAllIterators:
                 self.indexesForMappingFunction[i + 1] = self.indexesForMappingFunction[i + 1] + 1
                 self.indexesForMappingFunction[i] = 0
         return self.indexesForMappingFunction
-
-
-def wordsFromMostPopularLetter(text, lettersRate, begin, end, keyLen):
-    shortArrayOfLetters = []
-    for j in range(keyLen):
-        shortArrayOfLetters.append(lettersRate[j][begin:end])
-    print "Cutted version of letters arrays"
-    print shortArrayOfLetters
-    newInglishLetter = usualEnglishLettersRate[begin:end]
-    wordGenerator = Decoder(shortArrayOfLetters, keyLen, newInglishLetter)
-    for word in text.split():
-        wordGenerator.isCorrectWord(word)
-    wordGenerator.decodeConfirmWords()
-
-
-
-def secondPopularLettersWord(text, map, requiredLetters, englishLetters):
-    arrayOfLetters = []
-    for key, value in map.iteritems():
-        arrayOfLetters.append(chr(key))
-    arrayOfLetters = arrayOfLetters + requiredLetters
-    confirmWords = []
-    print arrayOfLetters
-    print requiredLetters
-    for word in text.split():
-        if isCorrectWordWithRequired(word, arrayOfLetters, requiredLetters):
-            confirmWords.append(word)
-        else:
-            continue
-    confirmWords = sorted(set(confirmWords))
-    confirmWords.sort(key=len, reverse=True)
-    print len(confirmWords)
-    print confirmWords
-    newMap = translateConfirmWords(confirmWords, map, requiredLetters, englishLetters)
-    print newMap
-    return newMap
-
-
-def translateConfirmWords(confirmWords, map, requiredLetters, englishLetters):
-    max = 0.8
-    maxNewMap = []
-    for p in itertools.permutations(englishLetters):
-        m = zip(requiredLetters,p)
-        newMap = fromListToMap(m)
-        newMap.update(map)
-      #   translatedWords = getCountOfTranslatedWords(confirmWords, newMap)
-      #   if translatedWords is not None:
-      #       print "asasd"
-      #       print translatedWords
-      #       break
-      #   else:
-      #       continue
-        tmp = getCountOfTranslatedWords(confirmWords, newMap)
-        if tmp == True :
-            max = tmp
-            maxNewMap = newMap
-            break
-    print "max = " + str(max)
-    return maxNewMap
-
 
 def isCorrectWordWithRequired(word, arrayOfLetters, requiredLetters):
     HaveRequredLettersCount = 0

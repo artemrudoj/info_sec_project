@@ -124,11 +124,11 @@ def frequencyAnalysis(cipher, keyLen):
     #считаем , что букву е мы знаем
     firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
 
-    # secondPartOfMappingFunctions = secondPopularLettersWord(cipher, firstPartOfMappingFunctions, arrayOfletters, 11, 20, usualEnglishLettersRate[11:20], keyLen)
+    secondPartOfMappingFunctions = secondPopularLettersWord(cipher, firstPartOfMappingFunctions, arrayOfletters, 11, 20, usualEnglishLettersRate[11:20], keyLen)
     #
     # # print secondPartOfMappingFunctions
-    # for i in range(keyLen):
-    #       firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
+    for i in range(keyLen):
+           firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
     print firstPartOfMappingFunctions
     chiper1 = decodeText(cipher, firstPartOfMappingFunctions,keyLen)
     print chiper1
@@ -195,32 +195,6 @@ class Decoder:
         self.keyLen = keyLen
         self.newInglishLetter = newInglishLetter
         self.alreadyKnowingLetters = alreadyKnowingLetters
-    #функция проверяет на корректность слова, под корректностью подразумевается, что оно полностью состоит из букв, а также все его букрвы лежат в диапозоне mappings[keylen]
-    #если слово корректное - оно добавляется в словарь confirmWords, где value - индекс первой буквы слова в тексте, нужно знать чтобы потом правильно заменять букрвы в слове
-    #иожно пределать чтобы несколько букв из обязаталеьных должно было быть
-    # def isCorrectWord(self, word, additionalsLetters):
-    #     isCorrect = True
-    #     tmp = self.currentIndex
-    #     for i in range(word.__len__()):
-    #         if ord(word[i]) in range(ord('A'), ord('Z') + 1, 1):
-    #             if isCorrect :
-    #                 if not word[i] in self.mappings[self.currentIndex % self.keyLen]:
-    #                     if additionalsLetters == None:
-    #                         isCorrect = False
-    #                     elif not ord(word[i]) in additionalsLetters[self.currentIndex % self.keyLen].keys():
-    #                             isCorrect = False
-    #             #чтобы правильно итерироваться по тексту
-    #             self.currentIndex = self.currentIndex + 1
-    #         else:
-    #             isCorrect = False
-    #             break
-    #     if isCorrect:
-    #         self.confirmWords.update({word:tmp})
-    #         return True
-    #     else:
-    #         return False
-
-    #вот тут нужно переделать
     def isCorrectWord(self, word, additionalsLetters):
         tmp = self.currentIndex
         countAdditionalLetters = 0
@@ -268,6 +242,7 @@ class Decoder:
                     break
                 elif (ret == 1):
                     print bijection.iterator.indexesForMappingFunction
+                    print 'bla bla bla'
                     self.correctMapFunction = bijection.iterator.indexesForMappingFunction
                     return mappingFunctions
             countOfTryedWords = 0
@@ -320,8 +295,7 @@ class BijectionOfAlphabet:
         self.keyLen = keyLen
         self.allCombinationOfEnglishLetters = list(itertools.permutations(englishLetters))
         #чтобы охватить все комбинации тут нужно что-нибудь придумать!!! а то дофига раз придется итерироваться
-        # self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
-        self.iterator = BossOfAllIterators(keyLen, 100)
+        self.iterator = BossOfAllIterators(keyLen, len(self.allCombinationOfEnglishLetters))
         self.mappings = mappings
         self.alreadyKnowingLetters = alreadyKnowingLetters
 
@@ -493,7 +467,7 @@ if __name__ == '__main__':
          if pattern.match(cipher[i]):
              cipherLetters += cipher[i]
     # !!!!!!!!!!!!!! epta
-    keyLen = 2
+    keyLen = 1
 
     # keyLen not always good
     frequencyAnalysis(cipher4, keyLen)

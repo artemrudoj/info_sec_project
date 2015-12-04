@@ -3,6 +3,9 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from decriptor.forms import InputTextForm
 from decriptor.models import SourceText
+import algoritm.alg
+import algoritm.cipher
+
 
 
 class HomePage(TemplateView):
@@ -12,14 +15,23 @@ class ResultPage(TemplateView):
     template_name = "result.html"
 
 def get_text(request):
-    print 1
     form = InputTextForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
-        print 2
         raw = SourceText(
             text=form.cleaned_data['text'],
             lang=form.cleaned_data['lang']
         )
+        print raw.text
+        text = unicode(raw.text)
+        print raw.lang
+        if (raw.lang == '0'):
+            newText1 = algoritm.alg.deleteChangeBadSymbols(text)
+            newText = algoritm.cipher.main(newText1, 'cs')
+        else :
+            newText1 = algoritm.alg.deleteChangeBadSymbols(text)
+            newText = algoritm.alg.frequencyAnalysis(newText1, 2)
+            print "asd"
+        raw.text = newText
         context = {'rawText' : raw}
         return render(request, "result.html", context)
     return render(request,

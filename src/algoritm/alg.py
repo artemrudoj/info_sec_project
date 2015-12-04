@@ -138,7 +138,7 @@ def frequencyAnalysis(cipher, keyLen):
     confirmWords = possibleTheWord(cipher,arrayOfletters,keyLen)
     aWords = possibleAWord(cipher, arrayOfletters, keyLen)
     andWords = possibleAndWord(cipher, arrayOfletters, keyLen)
-    chiper1 = performPossibleAandAndandThe(cipher,aWords, andWords, confirmWords,keyLen, arrayOfletters)
+    mapiingFunction = performPossibleAandAndandThe(cipher,aWords, andWords, confirmWords,keyLen, arrayOfletters)
     # formMappingTheAndA("THE", confirmWords, keyLen, aWords)
     # #считаем , что букву е мы знаем
     # firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
@@ -149,7 +149,7 @@ def frequencyAnalysis(cipher, keyLen):
     # for i in range(keyLen):
     #        firstPartOfMappingFunctions[i].update(secondPartOfMappingFunctions[i])
     # print firstPartOfMappingFunctions
-    # chiper1 = decodeText(cipher, mapiingFunction,keyLen)
+    chiper1 = decodeText(cipher, mapiingFunction,keyLen)
     print chiper1
     # return chiper1
 
@@ -322,37 +322,20 @@ def performPossibleAandAndandThe(text, aWords, andWords, theWords,keyLen, letter
     # a5 = frequencyAnalysisWords(ofWords, keyLen)
     for i in range(keyLen):
         mappingFunctioons[i].update({ord(a3[i][0][0][0]):u"T"})
-        mappingFunctioons[i].update({ord(u"T"):a3[i][0][0][0]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[i].clear()
 
         mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"H"})
-        mappingFunctioons[(i + 1) % keyLen].update({ord(u"H"):a3[i][0][0][1]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[(i + 1) % keyLen].clear()
 
 
         mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"E"})
-        mappingFunctioons[(i + 2) % keyLen].update({ord(u"E"):a3[i][0][0][2]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[(i + 2) % keyLen].clear()
+
 
 
         mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"A"})
-        mappingFunctioons[(i + 0) % keyLen].update({ord(u"A"):a2[i][0][0][0]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[i].clear()
-
 
         mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"N"})
-        mappingFunctioons[(i + 1) % keyLen].update({ord(u"N"):a2[i][0][0][1]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[(i + 1) % keyLen].clear()
+
 
         mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"D"})
-        mappingFunctioons[(i + 2) % keyLen].update({ord(u"D"):a2[i][0][0][2]})
-        text = decodeText(text, mappingFunctioons,keyLen)
-        mappingFunctioons[(i + 2) % keyLen].clear()
 
         # mappingFunctioonsFuckOrd[i].update({(a3[i][0][0][0]):u"T"})
         # mappingFunctioonsFuckOrd[(i + 1) % keyLen].update({(a3[i][0][0][1]):u"H"})
@@ -370,7 +353,7 @@ def performPossibleAandAndandThe(text, aWords, andWords, theWords,keyLen, letter
         # mappingFunctioons[(i + 1) % keyLen].update({ord(u"F"):a5[i][0][0][1]})
     #correctMappingFucntions = correctingOfFunction(mappingFunctioons, keyLen,"THEAND")
     print mappingFunctioonsFuckOrd
-    return text
+    return mappingFunctioons
 
 def correctingOfFunction(mappingFunctioons, keyLen, arrayOfLetters):
     letter = ""

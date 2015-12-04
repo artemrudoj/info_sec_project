@@ -352,7 +352,7 @@ def performPossibleAandAndandThe(text, aWords, andWords, theWords,keyLen, letter
         # mappingFunctioons[(i + 1) % keyLen].update({ord(u"O"):a4[i][0][0][1]})
         # mappingFunctioons[(i + 1) % keyLen].update({ord(u"F"):a5[i][0][0][1]})
     #correctMappingFucntions = correctingOfFunction(mappingFunctioons, keyLen,"THEAND")
-    print mappingFunctioonsFuckOrd
+    print mappingFunctioons
     return mappingFunctioons
 
 def correctingOfFunction(mappingFunctioons, keyLen, arrayOfLetters):

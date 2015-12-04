@@ -26,10 +26,10 @@ def get_text(request):
         print raw.lang
         if (raw.lang == '0'):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.cipher.main(newText1, 'cs')
+            newText = algoritm.cipher.main(newText1, 'sfgtrd')
         else :
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.alg.frequencyAnalysis(newText1, 2)
+            newText = algoritm.alg.frequencyAnalysis(newText1, 6)
             print "asd"
         raw.text = newText
         context = {'rawText' : raw}

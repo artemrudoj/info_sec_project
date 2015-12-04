@@ -286,8 +286,8 @@ def possibleOfWords(text, a4, keyLen, lettersRate):
     for word in re.split("[^A-Z]+",text):
         tmp = currentIndex
         if len(word) == 2:
-            if (word[0] == a4[currentIndex % keyLen][0][0][1]):
-                print a4[currentIndex % keyLen][0][0][0]
+            if (word[0] in a4[(currentIndex + 1) % keyLen][0][0][1]):
+                print word
                 if (word[1] in lettersRate[(currentIndex + 1)% keyLen][9:20]):
                     confirmWords[tmp] = word
             currentIndex = currentIndex + 2
@@ -301,28 +301,47 @@ def possibleOfWords(text, a4, keyLen, lettersRate):
 def performPossibleAandAndandThe(text, aWords, andWords, theWords,keyLen, lettersRate):
     print "Freq analys Words"
     mappingFunctioons = [{} for i in range(keyLen)]
+    mappingFunctioonsFuckOrd = [{} for i in range(keyLen)]
     print "A:"
     a1 = frequencyAnalysisWords(aWords,keyLen)
     print "AND:"
     a2 = frequencyAnalysisWords(andWords,keyLen)
+    print a2
     print "THE:"
     a3 = frequencyAnalysisWords(theWords, keyLen)
+    print a3
     toWords = possibleToWord(text, a3, keyLen,lettersRate)
     print "TO:"
     a4 = frequencyAnalysisWords(toWords, keyLen)
+
+    print "OF:"
     # ofWords = possibleOfWords(text, a4, keyLen,lettersRate)
-    # print "OF:"
     # a5 = frequencyAnalysisWords(ofWords, keyLen)
     for i in range(keyLen):
         mappingFunctioons[i].update({ord(a3[i][0][0][0]):u"T"})
+        print str(a3[i][0][0][0]) + ":" + str(a3[i][0][0][1]) + ":" + str(a3[i][0][0][2])
         mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"H"})
         mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"E"})
         mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"A"})
         mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"N"})
         mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"D"})
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a4[i][0][0][1]):u"O"})
-        # mappingFunctioons[i].update({ord(a5[i][0][0][1]):u"F"})
-    print mappingFunctioons
+        mappingFunctioonsFuckOrd[i].update({(a3[i][0][0][0]):u"T"})
+        mappingFunctioonsFuckOrd[(i + 1) % keyLen].update({(a3[i][0][0][1]):u"H"})
+        mappingFunctioonsFuckOrd[(i + 2) % keyLen].update({(a3[i][0][0][2]):u"E"})
+        mappingFunctioonsFuckOrd[(i + 0) % keyLen].update({(a2[i][0][0][0]):u"A"})
+        mappingFunctioonsFuckOrd[(i + 1) % keyLen].update({(a2[i][0][0][1]):u"N"})
+        mappingFunctioonsFuckOrd[(i + 2) % keyLen].update({(a2[i][0][0][2]):u"D"})
+        # mappingFunctioons[(i + 1) % keyLen].update({ord(a4[i][0][0][1]):u"O"})
+        # mappingFunctioons[(i + 1) % keyLen].update({ord(a5[i][0][0][1]):u"F"})
+        mappingFunctioons[i].update({ord(u"T"):a3[i][0][0][0]})
+        mappingFunctioons[(i + 1) % keyLen].update({ord(u"H"):a3[i][0][0][1]})
+        mappingFunctioons[(i + 2) % keyLen].update({ord(u"E"):a3[i][0][0][2]})
+        mappingFunctioons[(i + 0) % keyLen].update({ord(u"A"):a2[i][0][0][0]})
+        mappingFunctioons[(i + 1) % keyLen].update({ord(u"N"):a2[i][0][0][1]})
+        mappingFunctioons[(i + 1) % keyLen].update({ord(u"D"):a2[i][0][0][2]})
+        # mappingFunctioons[(i + 1) % keyLen].update({ord(u"O"):a4[i][0][0][1]})
+        # mappingFunctioons[(i + 1) % keyLen].update({ord(u"F"):a5[i][0][0][1]})
+    print mappingFunctioonsFuckOrd
     return mappingFunctioons
 
 

@@ -5,7 +5,8 @@ from decriptor.forms import InputTextForm
 from decriptor.models import SourceText
 import algoritm.alg
 import algoritm.cipher
-
+import algoritm.algArtem
+import algoritm.algNormal
 
 
 class HomePage(TemplateView):
@@ -26,10 +27,10 @@ def get_text(request):
         print raw.lang
         if (raw.lang == '0'):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.cipher.main(newText1, 'sfgtrd')
+            newText = algoritm.cipher.main(newText1, 'srf')
         else :
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.alg.frequencyAnalysis(newText1, 6)
+            newText = algoritm.algNormal.decipherEnglish(newText1, 3)
             print "asd"
         raw.text = newText
         context = {'rawText' : raw}

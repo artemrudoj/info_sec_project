@@ -16,7 +16,7 @@ d = enchant.Dict("en_US")
 # >>>
 pattern = re.compile("([A-Z])")
 patternThe = re.compile("([ETA][^ETA][ETA])")
-paternThats = re.compile("([ETAOIN][ETAOINSHRDL][ETAOIN][ETAOIN][’][OINSHRDLCUM])")
+paternThats = re.compile("([ETAOIN][ETAOINSHRDL][ETA][ETAOIN][’][OINSHRDLCUM])")
 patternETAOIN = re.compile("[ETAOIN]")
 
 # this is letter frequency in usual english
@@ -665,6 +665,7 @@ def decipherEnglish(text, keyLen):
     print map
     print time.time() - start
     print overal
+    return text4
 
 
 if __name__ == '__main__':

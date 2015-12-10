@@ -7,7 +7,10 @@ import algoritm.alg
 import algoritm.cipher
 import algoritm.algArtem
 import algoritm.algNormal
+import algoritm.algKey
 
+
+cypherArray = "dglsobmtsdgmrgkoerjheiorhjakmsldfk"
 
 class HomePage(TemplateView):
     template_name = "input.html"
@@ -22,16 +25,21 @@ def get_text(request):
             text=form.cleaned_data['text'],
             lang=form.cleaned_data['lang']
         )
-        print raw.text
         text = unicode(raw.text)
-        print raw.lang
-        if (raw.lang == '0'):
+        newText = ""
+        if 'decrypt' in request.POST:
+            print "decrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.cipher.main(newText1, 'srf')
-        else :
+            keyLen = algoritm.algKey.key_count(text)
+            print keyLen
+            newText = algoritm.algNormal.decipherEnglish(newText1, keyLen)
+        elif 'encrypt' in request.POST:
+            print  "encrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            newText = algoritm.algNormal.decipherEnglish(newText1, 3)
-            print "asd"
+            keyLen = int(form.cleaned_data['keyLen'])
+            newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
+
+
         raw.text = newText
         context = {'rawText' : raw}
         return render(request, "result.html", context)

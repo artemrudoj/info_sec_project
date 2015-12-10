@@ -12,3 +12,4 @@ class InputTextForm(forms.Form):
 
     text = forms.CharField(widget=forms.Textarea)
     lang = forms.ChoiceField(choices=LANG_CHOISE, widget=forms.RadioSelect())
+    keyLen = forms.CharField()

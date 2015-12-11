@@ -9,9 +9,10 @@ class Lang(Enum):
 class SourceText():
     text = ""
     lang = Lang.ru
+    keyLen = []
     def __init__(self, text, lang):
         self.text = text
         self.lang = lang
-
+    mappingFunctions = []
 
 

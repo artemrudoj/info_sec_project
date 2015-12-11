@@ -30,16 +30,16 @@ def get_text(request):
         if 'decrypt' in request.POST:
             print "decrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            keyLen = algoritm.algKey.key_count(text)
-            print keyLen
-            newText = algoritm.algNormal.decipherEnglish(newText1, keyLen)
+            raw.keyLen.append(algoritm.algKey.key_count(text))
+            raw.keyLen.append(1)
+            newText = algoritm.algNormal.decipherEnglish(newText1, raw.keyLen[0])
         elif 'encrypt' in request.POST:
             print  "encrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             keyLen = int(form.cleaned_data['keyLen'])
             newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
 
-
+        print  raw.keyLen
         raw.text = newText
         context = {'rawText' : raw}
         return render(request, "result.html", context)

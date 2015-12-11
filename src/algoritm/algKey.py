@@ -9,7 +9,7 @@ d = enchant.Dict("en_US")
 # False
 # >>> d.suggest("Helo")
 # ['He lo', 'He-lo', 'Hello', 'Helot', 'Help', 'Halo', 'Hell', 'Held', 'Helm', 'Hero', "He'll"]
-# >>>
+# >>>А
 pattern = re.compile("([A-Z])")
 
 # this is letter frequency in usual english

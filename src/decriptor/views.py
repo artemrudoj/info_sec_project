@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render
 from decriptor.forms import InputTextForm
-from decriptor.models import SourceText
+from decriptor.models import SourceText, Lang
 import algoritm.alg
 import algoritm.cipher
 import algoritm.algArtem
@@ -33,8 +33,12 @@ def get_text(request):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             raw.keyLen = algoritm.algKeyTest.key_count(text)
             newKeylen = algoritm.algKey.key_count(text)
-            raw.keyLen.append(1)
-            list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+            if raw.lang == Lang.en:
+                list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+            elif raw.lang == Lang.ru:
+                list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+            elif raw.lang == Lang.de:
+                list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
             newText = list[0]
             raw.mappingFunctions = list[1]
         elif 'encrypt' in request.POST:
@@ -42,8 +46,12 @@ def get_text(request):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             keyLen = int(form.cleaned_data['keyLen'])
             raw.keyLen.append(keyLen)
-            newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
-
+            if raw.lang == Lang.en:
+                newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
+            elif raw.lang == Lang.ru:
+                newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
+            elif raw.lang == Lang.de:
+                newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
         print  raw.keyLen
         raw.text = newText
         context = {'rawText' : raw}

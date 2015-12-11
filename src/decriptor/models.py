@@ -4,7 +4,7 @@ from algoritm import tools
 class Lang(Enum):
     ru = 0
     en = 1
-    fr = 2
+    de = 2
 
 class SourceText():
     text = ""

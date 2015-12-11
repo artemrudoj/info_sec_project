@@ -7,7 +7,7 @@ class InputTextForm(forms.Form):
     LANG_CHOISE = (
     (Lang.ru, 'ru'),
     (Lang.en, 'en'),
-    (Lang.fr, 'fr'),
+    (Lang.de, 'fr'),
     )
 
     text = forms.CharField(widget=forms.Textarea)

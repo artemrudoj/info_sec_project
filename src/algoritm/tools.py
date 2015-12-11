@@ -36,6 +36,11 @@ def main ():
     superEncrytor(algGerman.usualGermanLettersRate, 1,algGerman.usualGermanLettersRate)
 
 
+
+def deleteE(text):
+    text = text.replace(u'ё', u'Е')
+    return text.replace(u'Ё', u'Е')
+
 if __name__ == '__main__':
     main()
 

@@ -34,7 +34,7 @@ def main(text, key):
         if pattern.match(text[i]):
             newOrd = ord(text[i]) + keyInt[j]
             if newOrd > ordOfLastChar:
-                newOrd -= 33
+                newOrd -= 32
             cipherText += unichr(newOrd)
         else:
             offset += 1

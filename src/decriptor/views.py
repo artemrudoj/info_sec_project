@@ -11,7 +11,7 @@ import algoritm.algKeyTest
 import algoritm.englishCrack
 import algoritm.russianCipher
 import algoritm.russian
-
+import algoritm.tools
 
 cypherArray = u"dglsobmtsdgmrgkoerjheiorhjakmsldfk"
 russianArray = u"АБ"
@@ -58,6 +58,7 @@ def get_text(request):
                 newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
             elif int(raw.lang) == int(Lang.ru):
                 print "asdasd"
+                newText1 = algoritm.tools.deleteE(newText1)
                 newText = algoritm.russianCipher.main(newText1, russianArray[0:keyLen])
             elif raw.lang == Lang.de:
                 print "2"

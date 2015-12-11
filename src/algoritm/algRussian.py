@@ -109,21 +109,6 @@ def decodeText(text, mappingFunctions,  keyLen):
     return newText
 
 
-def wordsFromMostPopularLetter(text, lettersRate, begin, end, keyLen):
-    shortArrayOfLetters = []
-    forLetterE = []
-    for j in range(keyLen):
-        shortArrayOfLetters.append(lettersRate[j][begin:end])
-        forLetterE.append({ord(lettersRate[j][0]):u"О"})
-    print forLetterE
-    print "Cutted version of letters arrays"
-    print shortArrayOfLetters
-    newInglishLetter = usualRussianLettersRate[begin:end]
-    print newInglishLetter
-    decoder = Decoder(shortArrayOfLetters, keyLen, newInglishLetter, forLetterE)
-    for word in text.split():
-        decoder.isCorrectWord(word, forLetterE)
-    return  decoder.decodeConfirmWords()
 
 # Russian
 def possibleChtoWord(text, lettersRate, keyLen):
@@ -134,9 +119,10 @@ def possibleChtoWord(text, lettersRate, keyLen):
     for word in re.split(u"[^А-Я]+",text):
         tmp = currentIndex
         if len(word) == 3:
-            print word
+            # print word
+            # print smart_str(u"".join(lettersRate[(currentIndex + 2) % keyLen]))
             if(word[2] in lettersRate[(currentIndex + 2) % keyLen][0:1]): # о
-                print word
+                # print word
                 if (word[1] in lettersRate[(currentIndex + 1) % keyLen][2:8]): #т
                     print word
                     if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][13:25]): #ч

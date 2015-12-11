@@ -1,12 +1,11 @@
 from django.views.generic import TemplateView
 from django.shortcuts import render
-from django.http import HttpResponseRedirect
 from decriptor.forms import InputTextForm
 from decriptor.models import SourceText
 import algoritm.alg
 import algoritm.cipher
 import algoritm.algArtem
-import algoritm.algNormal
+import algoritm.englishCrack
 import algoritm.algKey
 
 
@@ -32,11 +31,17 @@ def get_text(request):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             raw.keyLen.append(algoritm.algKey.key_count(text))
             raw.keyLen.append(1)
-            newText = algoritm.algNormal.decipherEnglish(newText1, raw.keyLen[0])
+            list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+            newText = list[0]
+            raw.mappingFunctions = list[1]
+            print "asasdasd"
+            print raw.mappingFunctions
+            print "asasdasd"
         elif 'encrypt' in request.POST:
             print  "encrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             keyLen = int(form.cleaned_data['keyLen'])
+            raw.keyLen.append(keyLen)
             newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
 
         print  raw.keyLen

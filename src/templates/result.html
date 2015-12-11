@@ -6,5 +6,12 @@
                     <textarea class="form-control" rows="15">{{ rawText.text }}</textarea>
                 </div>
                 <p>Period = {{ i }} </p>
+                <p>Count of symbols in the text = {{ rawText.textLen }} </p>
+                <p>Mapping functions: </p>
+                {% for i in rawText.mappingFunctions %}
+                    {% for chiperLetter, normalLetter in i.items %}
+                        <p>{{ chiperLetter }} --> {{ normalLetter }}</p>
+                    {% endfor %}
+                {% endfor %}
             {% endfor %}
 {%  endblock %}

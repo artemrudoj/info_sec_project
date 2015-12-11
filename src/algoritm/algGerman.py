@@ -28,7 +28,7 @@ def deleteChangeBadSymbols(text):
 # this is letter frequency in usual english
 # ДАНЯ менять
 # usualEnglishLettersRate = u"etaoinshrdlcumwfgypbvkjxqz"
-usualGermanLettersRate  = u"enistradhugmclbofkwvzpjqyx"
+usualGermanLettersRate  = u"enistradhugmclbofkwvzpjqyxäöüß"
 # usualEnglishLettersRate = usualEnglishLettersRate.upper()
 usualGermanLettersRate  = usualGermanLettersRate.upper()
 

@@ -32,3 +32,7 @@ def main(text, key):
     print(text)
     print(cipherText)
     return cipherText
+
+
+
+# def supperCrypter(text, keyLen, alphabet):

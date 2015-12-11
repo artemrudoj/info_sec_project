@@ -97,7 +97,8 @@ def key_count(cipher):
                         my_factor[i] += 1
     print my_factor
     first_max = max(my_factor)
-    current_i = my_factor.index(first_max)
+    first_max_i = my_factor.index(first_max)
+    current_i = first_max_i
     i = 2
     prev_max = first_max
     next_max = sorted(my_factor)[-i]
@@ -112,7 +113,29 @@ def key_count(cipher):
         else:
             i = -1
     print current_i
-    return current_i
+    sorted_indexes = []
+    sorted_indexes.append(current_i)
+    sorted_indexes.append(first_max_i)
+    prev_max = first_max
+    prev_max_i = first_max_i
+    for i in range(2, len(my_factor)):
+        next_max = sorted(my_factor)[-i]
+        next_max_i = my_factor.index(next_max)
+        print next_max
+        print prev_max
+        if float(next_max) / float(prev_max) >= 0.5 and (next_max_i > prev_max_i or float(next_max) / float(prev_max) >= 0.95):
+            prev_max = next_max
+            prev_max_i = next_max_i
+            sorted_indexes.append(next_max_i)
+        else:
+            break
+    print sorted_indexes
+    if sorted_indexes[0] == sorted_indexes[-1]:
+        print [sorted_indexes[0]]
+        return [sorted_indexes[0]]
+    else:
+        print sorted_indexes[1:sorted_indexes.__len__()]
+        return sorted_indexes[1:sorted_indexes.__len__()]
 
 def deleteChangeBadSymbols(text):
     text = re.sub(patternQuots, '', text)
@@ -521,7 +544,7 @@ He turned off the gas, and the springs shrieked under his body.
 "But you’ve got to quit cussin’, Martin, old boy; you’ve got to quit cussin’," he said aloud.
 
 Then he dozed off to sleep and to dream dreams that for madness and audacity rivalled those of poppy-eaters.'''
-    key = u"kfdsf"
+    key = u"kfdsffjskdfjdkfd"
     # lettetsRate = calculateLettersRate(text138, 10)
     # print(lettetsRate)
     # print(lettetsRate)

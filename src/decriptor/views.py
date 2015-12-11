@@ -5,8 +5,9 @@ from decriptor.models import SourceText
 import algoritm.alg
 import algoritm.cipher
 import algoritm.algArtem
-import algoritm.englishCrack
 import algoritm.algKey
+import algoritm.algKeyTest
+import algoritm.englishCrack
 
 
 cypherArray = "dglsobmtsdgmrgkoerjheiorhjakmsldfk"
@@ -26,17 +27,16 @@ def get_text(request):
         )
         text = unicode(raw.text)
         newText = ""
+        newKeylen = []
         if 'decrypt' in request.POST:
             print "decrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            raw.keyLen.append(algoritm.algKey.key_count(text))
+            raw.keyLen = algoritm.algKeyTest.key_count(text)
+            newKeylen = algoritm.algKey.key_count(text)
             raw.keyLen.append(1)
             list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
             newText = list[0]
             raw.mappingFunctions = list[1]
-            print "asasdasd"
-            print raw.mappingFunctions
-            print "asasdasd"
         elif 'encrypt' in request.POST:
             print  "encrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
@@ -47,6 +47,7 @@ def get_text(request):
         print  raw.keyLen
         raw.text = newText
         context = {'rawText' : raw}
+        print newKeylen
         return render(request, "result.html", context)
     return render(request,
         "input.html", {"form" : form }

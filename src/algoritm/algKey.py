@@ -18,25 +18,14 @@ usualEnglishLettersRate = usualEnglishLettersRate.upper()
 
 
 
-my_final_words = []
-my_final_diff = []
-my_search_word = []
-my_wrd_arr = []
-my_dif_arr = []
-index_arr = []
-str = u""
-myindex = 0
-
 def key_count(cipher):
-    global nl, N
-    print cipher
-    global my_final_diff
-    global my_search_word
-    global my_wrd_arr
-    global my_dif_arr
-    global index_arr
-    global str
-    global myindex
+    my_final_diff = []
+    my_search_word = []
+    my_wrd_arr = []
+    my_dif_arr = []
+    index_arr = []
+    str = u""
+    myindex = 0
     cipherLetters = u""
     for i in range(cipher.__len__()):
         if i > 4000:

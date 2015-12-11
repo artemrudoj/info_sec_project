@@ -2,6 +2,8 @@
 __author__ = 'artem'
 from random import shuffle
 import algGerman
+import cipherGerman
+import re
 
 def countOfSymbolsOnText(text):
     return text.__len__
@@ -16,7 +18,13 @@ def shuffle_word(word):
     shuffle(list)
     return ''.join(list)
 
-def superEncrytor(text, keyLen, alphabet):
+def superEncrytor(text, keyLen, lang, alphabet):
+    if lang == 0:
+        pattern = re.compile("([А-Я])")
+    elif lang == 1:
+        pattern = re.compile("([A-Z])")
+    elif lang == 2:
+        pattern = re.compile("([A-ZÄÖÜß])")
     chipherLetters = [u"" for i in range(keyLen)]
     for i in range(keyLen):
         chipherLetters[i] = shuffle_word(alphabet)
@@ -29,11 +37,13 @@ def superEncrytor(text, keyLen, alphabet):
             indexInArray = alphabet.index(letter)
             chipherText = chipherText + chipherLetters[index % keyLen][indexInArray]
             index = index + 1
-    return text
+        else:
+            chipherText = chipherText + letter
+    return chipherText
 
 def main ():
     print algGerman.usualGermanLettersRate
-    superEncrytor(algGerman.usualGermanLettersRate, 1,algGerman.usualGermanLettersRate)
+    print superEncrytor(cipherGerman.textGerman, 6, 2, algGerman.usualGermanLettersRate)
 
 
 if __name__ == '__main__':

@@ -21,6 +21,7 @@ def main(text, key):
     cipherText = u""
     keyLen = key.__len__()
     keyInt = []
+    print  text
     for i in range(keyLen):
         keyInt.append(ord(key[i]) - ord(u'А'))
     print keyInt
@@ -38,9 +39,7 @@ def main(text, key):
         else:
             offset += 1
             cipherText += text[i]
-
-    # print(text)
-    print(cipherText)
+    return cipherText
 
 def calculateLettersRate(cipher, keyLen):
     print cipher

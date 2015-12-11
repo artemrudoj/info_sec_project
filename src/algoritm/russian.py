@@ -6,8 +6,8 @@ import itertools
 import enchant
 import algRussian
 print enchant.list_languages()
-
-d = enchant.Dict("en_US")
+from django.utils.encoding import smart_str, smart_unicode
+d = enchant.Dict("ru_RU")
 
 pattern = re.compile(u"([А-Я])")
 patternQuots = re.compile("[\"]")
@@ -49,11 +49,14 @@ def calculateLettersRate(cipher, keyLen):
         for i in range(len(temp)):
             letters += temp[i]
         lettersRate.append(letters)
-
+    print lettersRate
+    for dict in lettersRate:
+        print smart_str(dict)
     return lettersRate
 
 
 def frequencyAnalysis(cipher, keyLen, currentRate, lettersRate):
+
     cipherLetters = u""
     for i in range(cipher.__len__()):
          if pattern.match(cipher[i]):
@@ -68,7 +71,7 @@ def frequencyAnalysis(cipher, keyLen, currentRate, lettersRate):
         if not pattern.match(cipher[i]):
             text = text[:i] + cipher[i] + text[i:]
 
-    print text
+
     return text
 
 
@@ -103,13 +106,17 @@ def decipherRussian(text, keyLen):
     start = time.time()
 
     lettetsRate = calculateLettersRate(text, keyLen)
+    print lettetsRate
     keyLetterRate = []
     for i in range(keyLen):
         keyLetterRate.append(usualRussianLettersRate)
 
-    text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
+    # text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
+    print smart_str(text)
     map = algRussian.frequencyAnalysis(text, keyLen)
     offsetArray = calculateOffsetArray(text)
+
+
 
     overal = 0
     words = re.split(u"[^А-Я]+", text)

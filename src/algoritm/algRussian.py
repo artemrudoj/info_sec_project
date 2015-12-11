@@ -4,8 +4,9 @@ import re
 import operator
 import itertools
 from collections import OrderedDict
+from django.utils.encoding import smart_str
 import enchant
-print enchant.list_languages()
+
 # d = enchant.Dict("de_DE")
 # >>> d.check("Hello")
 # True
@@ -32,18 +33,7 @@ usualRussianLettersRate  = u"оеаинтслвркмдпыубяьгзчйжх�
 usualRussianLettersRate  = usualRussianLettersRate.upper()
 
 
-# вот эту фигню варьировать
-N = 4
-frequentAnalysisError = 4
 
-l = []
-nods = []
-for i in range(1000):
-    nods.append(0)
-    l.append(0)
-nl = 0
-
-print l
 
 def frequencyAnalysis(cipher, keyLen):
     cipherLetters = u""
@@ -62,6 +52,7 @@ def frequencyAnalysis(cipher, keyLen):
     for i in range(cipherLetters.__len__()):
         lettersCount[i % keyLen][cipherLetters[i]] += 1
 
+    print lettersCount
 
     sorted_lettersCount = []
     arrayOfletters = []
@@ -75,8 +66,7 @@ def frequencyAnalysis(cipher, keyLen):
     #ДАНЯ переписать
     chtoWords = possibleChtoWord(cipher,arrayOfletters,keyLen)
     kakWords = possibleKakWord(cipher, arrayOfletters, keyLen)
-    takWords = possibleTakWord(cipher, arrayOfletters, keyLen)
-    mapiingFunction = performPossibleChtoAndKakAndTak(cipher, chtoWords, kakWords, takWords, keyLen, arrayOfletters)
+    mapiingFunction = performPossibleChtoAndKakAndTak(cipher, chtoWords, kakWords, keyLen, arrayOfletters)
     # formMappingTheAndA("THE", confirmWords, keyLen, aWords)
     # #считаем , что букву е мы знаем
     # firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
@@ -140,13 +130,16 @@ def possibleChtoWord(text, lettersRate, keyLen):
     currentIndex = 0
     confirmWords = {}
     tmp = 0
+    print "что:"
     for word in re.split(u"[^А-Я]+",text):
         tmp = currentIndex
         if len(word) == 3:
-            if(word[2] == lettersRate[(currentIndex + 2) % keyLen][0]): # о
+            print word
+            if(word[2] in lettersRate[(currentIndex + 2) % keyLen][0:1]): # о
                 print word
-                if (word[1] in lettersRate[(currentIndex + 1) % keyLen][3:9]): #т
-                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][17:25]): #ч
+                if (word[1] in lettersRate[(currentIndex + 1) % keyLen][2:8]): #т
+                    print word
+                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][13:25]): #ч
                         confirmWords[tmp] = word
             currentIndex = currentIndex + 3
         else:
@@ -158,11 +151,12 @@ def possibleKakWord(text, lettersRate, keyLen):
     currentIndex = 0
     confirmWords = {}
     tmp = 0
+    print "как:"
     for word in re.split(u"[^А-Я]+",text):
         tmp = currentIndex
         if len(word) == 3:
-            if(word[1] == lettersRate[(currentIndex + 1) % keyLen][2:3]): #а
-                print word
+            if(word[1] in lettersRate[(currentIndex + 1) % keyLen][1:7]): #а
+
                 if (word[0] in lettersRate[(currentIndex + 0) % keyLen][7:15]): #к
                     if (word[2] in lettersRate[(currentIndex + 2)  % keyLen][7:15]): #к
                         confirmWords[tmp] = word
@@ -172,23 +166,6 @@ def possibleKakWord(text, lettersRate, keyLen):
     print confirmWords
     return confirmWords
 
-def possibleTakWord(text, lettersRate, keyLen):
-    currentIndex = 0
-    confirmWords = {}
-    tmp = 0
-    for word in re.split(u"[^А-Я]+",text):
-        tmp = currentIndex
-        if len(word) == 3:
-            if(word[1] == lettersRate[(currentIndex + 1) % keyLen][2:3]): #а
-                print word
-                if (word[0] in lettersRate[(currentIndex + 0) % keyLen][3:9]): #т
-                    if (word[2] in lettersRate[(currentIndex + 2)  % keyLen][7:15]): #к
-                        confirmWords[tmp] = word
-            currentIndex = currentIndex + 3
-        else:
-            currentIndex = currentIndex + len(word)
-    print confirmWords
-    return confirmWords
 
 def searchInArrayOfChar(c, array, begin, end):
     for i in range(begin,end,1):
@@ -224,7 +201,7 @@ def formMappingTheAndA(possibleWord, confirmWords, keyLen, aWords):
     return mappigFunctions
 
 
-def performPossibleChtoAndKakAndTak(text, chtoWords, kakWords, takWords, keyLen, lettersRate):
+def performPossibleChtoAndKakAndTak(text, chtoWords, kakWords, keyLen, lettersRate):
     print u"Freq analys Words"
     mappingFunctioons = [{} for i in range(keyLen)]
     mappingFunctioonsFuckOrd = [{} for i in range(keyLen)]
@@ -234,31 +211,31 @@ def performPossibleChtoAndKakAndTak(text, chtoWords, kakWords, takWords, keyLen,
     print u"Как:"
     a2 = frequencyAnalysisWords(kakWords, keyLen)
     print a2
-    print u"Так:"
-    a3 = frequencyAnalysisWords(takWords, keyLen)
-    print a3
+    # print u"Так:"
+    # a3 = frequencyAnalysisWords(takWords, keyLen)
+    # print a3
 
     for i in range(keyLen):
         # переписать
-        mappingFunctioons[(i + 0) % keyLen].update({ord(a1[i][0][0][0]):u"Ч"})
+        if (a2[i] != []):
+            mappingFunctioons[(i + 0) % keyLen].update({ord(a1[i][0][0][0]):u"Ч"})
 
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a1[i][0][0][1]):u"Т"})
+            mappingFunctioons[(i + 1) % keyLen].update({ord(a1[i][0][0][1]):u"Т"})
 
-        mappingFunctioons[(i + 2) % keyLen].update({ord(a1[i][0][0][2]):u"О"})
+            mappingFunctioons[(i + 2) % keyLen].update({ord(a1[i][0][0][2]):u"О"})
+
+        if (a2[i] != []):
+            mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"К"})
+            mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"А"})
+
+        # mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"К"})
 
 
-        mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"К"})
-
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"А"})
-
-        mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"К"})
-
-
-        mappingFunctioons[(i + 0) % keyLen].update({ord(a3[i][0][0][0]):u"Т"})
-
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"А"})
-
-        mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"К"})
+        # mappingFunctioons[(i + 0) % keyLen].update({ord(a3[i][0][0][0]):u"Т"})
+        #
+        # mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"А"})
+        #
+        # mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"К"})
 
     return mappingFunctioons
 
@@ -280,7 +257,7 @@ def frequencyAnalysisWords(aWord, keyLen):
     for i in range(keyLen):
         #FIXME
         words[i] = sorted(words[i].items(), key=operator.itemgetter(1), reverse=True)
-        print str(i) + ": " + str(words[i])
+        print str(i) + ": " + smart_str(words[i][0][0])
     return  words
 
 

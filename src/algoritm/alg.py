@@ -29,18 +29,7 @@ usualEnglishLettersRate = u"etaoinshrdlcumwfgypbvkjxqz"
 usualEnglishLettersRate = usualEnglishLettersRate.upper()
 
 
-# вот эту фигню варьировать
-N = 4
-frequentAnalysisError = 4
 
-l = []
-nods = []
-for i in range(1000):
-    nods.append(0)
-    l.append(0)
-nl = 0
-
-print l
 
 
 

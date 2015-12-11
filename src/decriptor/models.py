@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*-
 from enum import Enum
 from algoritm import tools
 class Lang(Enum):

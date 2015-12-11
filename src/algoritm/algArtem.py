@@ -214,21 +214,14 @@ def performPossibleAandAndandThe(text, aWords, andWords, theWords,keyLen, letter
     # a5 = frequencyAnalysisWords(ofWords, keyLen)
     for i in range(keyLen):
         # переписать
-        mappingFunctioons[i].update({ord(a3[i][0][0][0]):u"T"})
-
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"H"})
-
-
-        mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"E"})
-
-
-
-        mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"A"})
-
-        mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"N"})
-
-
-        mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"D"})
+        if ( a3[i] != []):
+            mappingFunctioons[i].update({ord(a3[i][0][0][0]):u"T"})
+            mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"H"})
+            mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"E"})
+        if (a2[i] != []):
+            mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"A"})
+            mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"N"})
+            mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"D"})
     print mappingFunctioons
     return mappingFunctioons
 

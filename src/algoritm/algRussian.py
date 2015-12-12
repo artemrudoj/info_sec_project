@@ -221,7 +221,7 @@ def performPossibleChtoAndKakAndNe(text, chtoWords, kakWords, neWords, keyLen, l
 
     for i in range(keyLen):
         # переписать
-        if (a2[i] != []):
+        if (a1[i] != []):
             mappingFunctioons[(i + 0) % keyLen].update({ord(a1[i][0][0][0]):u"Ч"})
 
             mappingFunctioons[(i + 1) % keyLen].update({ord(a1[i][0][0][1]):u"Т"})

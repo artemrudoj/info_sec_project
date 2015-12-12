@@ -2,7 +2,9 @@
 __author__ = 'artem'
 from random import shuffle
 import algGerman
-
+import re
+patternQuots = re.compile("[\"]")
+patternNewLine = re.compile("[\n]")
 
 def countOfSymbolsOnText(text):
     return text.__len__
@@ -39,7 +41,11 @@ def superEncrytor(text, keyLen, alphabet):
     print(chipherLetters)
     return chipherText
 
-
+def deleteChangeBadSymbols(text):
+    text = text.upper()
+    text = re.sub(patternQuots, '', text)
+    text = re.sub(patternNewLine, ' ', text)
+    return text
 
 def main ():
     print algGerman.usualGermanLettersRate

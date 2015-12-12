@@ -64,9 +64,10 @@ def frequencyAnalysis(cipher, keyLen):
     print(arrayOfletters)
 
     #ДАНЯ переписать
-    derWords = possibleDerWord(cipher,arrayOfletters,keyLen)
+    derWords = possibleDerWord(cipher, arrayOfletters,keyLen)
     dieWords = possibleDieWord(cipher, arrayOfletters, keyLen)
-    mapiingFunction = performPossibleDerAndDie(cipher, derWords, dieWords, keyLen, arrayOfletters)
+    undWords = possibleUndWord(cipher, arrayOfletters, keyLen)
+    mapiingFunction = performPossibleDerAndDieAndUnd(cipher, derWords, dieWords, undWords, keyLen, arrayOfletters)
     # formMappingTheAndA("THE", confirmWords, keyLen, aWords)
     # #считаем , что букву е мы знаем
     # firstPartOfMappingFunctions = wordsFromMostPopularLetter(cipher, arrayOfletters, 1, 11, keyLen)
@@ -149,10 +150,27 @@ def possibleDieWord(text, lettersRate, keyLen):
     print confirmWords
     return confirmWords
 
+def possibleUndWord(text, lettersRate, keyLen):
+    currentIndex = 0
+    confirmWords = {}
+    tmp = 0
+    for word in re.split(u"[^A-ZÄÖÜß]+",text):
+        tmp = currentIndex
+        if len(word) == 3:
+            if (word[1] in lettersRate[(currentIndex + 1) % keyLen][0:2]): #n
+                print word
+                if (word[2] in lettersRate[(currentIndex + 2) % keyLen][5:11]): #d
+                    print word
+                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][7:13]): #u
+                        confirmWords[tmp] = word
+            currentIndex = currentIndex + 3
+        else:
+            currentIndex = currentIndex + len(word)
+    print confirmWords
+    return confirmWords
 
 
-
-def performPossibleDerAndDie(text, derWords, dieWords, keyLen, lettersRate):
+def performPossibleDerAndDieAndUnd(text, derWords, dieWords, undWords, keyLen, lettersRate):
     print "Freq analys Words"
     mappingFunctioons = [{} for i in range(keyLen)]
     mappingFunctioonsFuckOrd = [{} for i in range(keyLen)]
@@ -162,6 +180,9 @@ def performPossibleDerAndDie(text, derWords, dieWords, keyLen, lettersRate):
     print "DIE:"
     a2 = frequencyAnalysisWords(dieWords, keyLen)
     print a2
+    print "UND:"
+    a3 = frequencyAnalysisWords(undWords, keyLen)
+    print a3
 
     # toWords = possibleToWord(text, a3, keyLen,lettersRate)
     # print "TO:"
@@ -176,17 +197,21 @@ def performPossibleDerAndDie(text, derWords, dieWords, keyLen, lettersRate):
 
         mappingFunctioons[(i + 1) % keyLen].update({ord(a1[i][0][0][1]):u"E"})
 
-
         mappingFunctioons[(i + 2) % keyLen].update({ord(a1[i][0][0][2]):u"R"})
-
 
 
         mappingFunctioons[(i + 0) % keyLen].update({ord(a2[i][0][0][0]):u"D"})
 
         mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"I"})
 
-
         mappingFunctioons[(i + 2) % keyLen].update({ord(a2[i][0][0][2]):u"E"})
+
+
+        mappingFunctioons[(i + 0) % keyLen].update({ord(a3[i][0][0][0]):u"U"})
+
+        mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"N"})
+
+        mappingFunctioons[(i + 2) % keyLen].update({ord(a3[i][0][0][2]):u"D"})
 
     return mappingFunctioons
 

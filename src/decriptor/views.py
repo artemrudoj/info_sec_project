@@ -13,6 +13,8 @@ import algoritm.russianCipher
 import algoritm.russian
 import algoritm.tools
 import algoritm.germanCrack
+from threading import Thread
+N = 4
 cypherArray = u"dglsobmtsdgmrgkoerjheiorhjakmsldfk"
 russianArray = u"АБДБИЬФИФБЙЦАЙЦЗАБЦЙЗЩА"
 
@@ -23,6 +25,8 @@ class ResultPage(TemplateView):
     template_name = "result.html"
 
 def get_text(request):
+    threads = [None] * N
+    results = [None] * N
     form = InputTextForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         raw = SourceText(
@@ -37,15 +41,42 @@ def get_text(request):
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
             if int(raw.lang) == (Lang.en):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 1)
-                list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+                for i in range(raw.keyLen):
+                    if i >= N:
+                        break
+                    threads[i] = Thread(target=algoritm.englishCrack.decipherEnglish, args=(newText1, raw.keyLen[i], results, i))
+                    threads[i].start()
+                    # list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
             elif int(raw.lang) == int(Lang.ru):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 0)
                 print raw.keyLen
-                list = algoritm.russian.decipherRussian(newText1, raw.keyLen[0])
+                for i in range(raw.keyLen):
+                    if i >= N:
+                        break
+                    threads[i] = Thread(target=algoritm.russian.decipherRussian, args=(newText1, raw.keyLen[i], results, i))
+                    threads[i].start()
+                # list = algoritm.russian.decipherRussian(newText1, raw.keyLen[0])
             elif int(raw.lang) == int(Lang.de):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 2)
-                list = algoritm.germanCrack.decipherGerman(newText1, raw.keyLen[0])
-            newText = list[0]
+                for i in range(raw.keyLen):
+                    if i >= N:
+                        break
+                    threads[i] = Thread(target=algoritm.germanCrack.decipherGerman, args=(newText1, raw.keyLen[i], results, i))
+                    threads[i].start()
+                # list = algoritm.germanCrack.decipherGerman(newText1, raw.keyLen[0])
+
+            for i in range(len(threads)):
+                if threads[i] == None:
+                    break
+                threads[i].join()
+
+
+            newText = []
+            # newText = list[0]
+            for i in range(results.__len__()):
+                if results[i] == None:
+                    break
+                newText.append(results[i][0])
             raw.mappingFunctions = list[1]
         elif 'encrypt' in request.POST:
             print  "encrypt"

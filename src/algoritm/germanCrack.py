@@ -105,7 +105,7 @@ def suggest(letterList, starIndex):
     return candidates
 
 
-def decipherGerman(text, keyLen):
+def decipherGerman(text, keyLen, results, threadId):
     start = time.time()
 
     lettetsRate = calculateLettersRate(text, keyLen)
@@ -186,6 +186,7 @@ def decipherGerman(text, keyLen):
     answerList.append(text4)
     answerList.append(map)
     answerList.append(performingTime)
+    results[threadId] = answerList
     return answerList
 
 

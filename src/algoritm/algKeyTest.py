@@ -6,7 +6,7 @@ pattern = re.compile("([A-Z])$")
 patternQuots = re.compile("[\"]")
 patternNewLine = re.compile("[\n]")
 
-pattern = re.compile("([-Z])")
+
 
 
 

@@ -43,7 +43,7 @@ def get_text(request):
                 list = algoritm.russian.decipherRussian(newText1, raw.keyLen[0])
             elif int(raw.lang) == int(Lang.de):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 2)
-                list = algoritm.germanCrack.decipherGerman(newText1, raw.keyLen[0])
+                list = algoritm.germanCrack.decipherGerman(newText1, 2)
             newText = list[0]
             raw.mappingFunctions = list[1]
         elif 'encrypt' in request.POST:

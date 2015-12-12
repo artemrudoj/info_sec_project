@@ -14,7 +14,7 @@ d = enchant.Dict("de_DE")
 # >>> d.suggest("Helo")
 # ['He lo', 'He-lo', 'Hello', 'Helot', 'Help', 'Halo', 'Hell', 'Held', 'Helm', 'Hero', "He'll"]
 # >>>
-pattern = re.compile("([A-ZÄÖÜß])")
+pattern = re.compile(u"([A-ZÄÖÜß])")
 
 # this is letter frequency in usual german
 usualGermanLettersRate = u"ensriatdhulgcomwbfkzüvpäößjyxq"
@@ -81,7 +81,7 @@ def swap(s, c1, c2):
 
 def calculateOffsetArray(text):
     keyLenOffsetArray = []
-    words = re.split("[^A-ZÄÖÜß]+", text)
+    words = re.split(u"[^A-ZÄÖÜß]+", text)
     # words = re.split(" ", text)
     offset = 0  # index of the first letter of the current word| (offset + 1) % keyLen - number of alphabet
     for i in range(words.__len__()):
@@ -118,7 +118,7 @@ def decipherGerman(text, keyLen):
     offsetArray = calculateOffsetArray(text)
 
     overal = 0
-    words = re.split("[^A-ZÄÖÜß]+", text)
+    words = re.split(u"[^A-ZÄÖÜß]+", text)
     wordsLen = words.__len__()
     for j in range(3):
         for i in range(wordsLen):

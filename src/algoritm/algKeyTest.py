@@ -6,6 +6,7 @@ pattern = re.compile("([A-Z])$")
 patternQuots = re.compile("[\"]")
 patternNewLine = re.compile("[\n]")
 
+pattern = re.compile("([-Z])")
 
 
 
@@ -24,7 +25,7 @@ def key_count(cipher, lang):
     index_arr = []
     cipherLetters = u""
     for i in range(cipher.__len__()):
-        if i > 4000:
+        if i > 10000:
             break
         if pattern.match(cipher[i]):
              cipherLetters += cipher[i]
@@ -109,7 +110,7 @@ def key_count(cipher, lang):
             i = -1
     # print current_i
     sorted_indexes = []
-    sorted_indexes.append(current_i)
+    # sorted_indexes.append(current_i)
     sorted_indexes.append(first_max_i)
     prev_max = first_max
     prev_max_i = first_max_i
@@ -124,14 +125,14 @@ def key_count(cipher, lang):
             sorted_indexes.append(next_max_i)
         else:
             break
-    # print sorted_indexes
-    # if sorted_indexes[0] == sorted_indexes[-1]:
-    #     print [sorted_indexes[0]]
-    #     return [sorted_indexes[0]]
-    # else:
-    #     print sorted_indexes[1:sorted_indexes.__len__()]
-    #     return sorted_indexes[1:sorted_indexes.__len__()]
-    return sorted_indexes
+    reversed_indexes = sorted(sorted_indexes, reverse=True)
+    print(reversed_indexes)
+    final_indexes = []
+    reversed_indexes.remove(current_i)
+    final_indexes.append(current_i)
+    final_indexes += reversed_indexes
+    print(final_indexes)
+    return final_indexes
 
 def deleteChangeBadSymbols(text):
     text = re.sub(patternQuots, '', text)
@@ -540,7 +541,7 @@ He turned off the gas, and the springs shrieked under his body.
 "But you’ve got to quit cussin’, Martin, old boy; you’ve got to quit cussin’," he said aloud.
 
 Then he dozed off to sleep and to dream dreams that for madness and audacity rivalled those of poppy-eaters.'''
-    key = u"kfdsffjskdfjdkfd"
+    key = u"sdfithfjkdjfkjdk"
     # lettetsRate = calculateLettersRate(text138, 10)
     # print(lettetsRate)
     # print(lettetsRate)
@@ -549,8 +550,5 @@ Then he dozed off to sleep and to dream dreams that for madness and audacity riv
     text138 = deleteChangeBadSymbols(text138)
     text138 = text138.upper()
     print(text138.__len__())
-    lettetsRate = calculateLettersRate(text138, 30)
-    print(lettetsRate)
-    print(text138)
     key_count(cipher(text138, key), 1)
 

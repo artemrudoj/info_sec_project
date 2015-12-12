@@ -17,7 +17,7 @@ d = enchant.Dict("de_DE")
 pattern = re.compile("([A-ZÄÖÜß])")
 
 # this is letter frequency in usual german
-usualGermanLettersRate = u"enistradhugmclbofkwvzpjqyxäöüß"
+usualGermanLettersRate = u"ensriatdhulgcomwbfkzüvpäößjyxq"
 usualGermanLettersRate = usualGermanLettersRate.upper()
 
 

@@ -28,7 +28,7 @@ def deleteChangeBadSymbols(text):
 # this is letter frequency in usual english
 # ДАНЯ менять
 # usualEnglishLettersRate = u"etaoinshrdlcumwfgypbvkjxqz"
-usualGermanLettersRate  = u"enistradhugmclbofkwvzpjqyxäöüß"
+usualGermanLettersRate  = u"ensriatdhulgcomwbfkzüvpäößjyxq"
 # usualEnglishLettersRate = usualEnglishLettersRate.upper()
 usualGermanLettersRate  = usualGermanLettersRate.upper()
 
@@ -174,8 +174,8 @@ def possibleDerWord(text, lettersRate, keyLen):
         if len(word) == 3:
             if(word[1] == lettersRate[(currentIndex + 1) % keyLen][0]): #e
                 print word
-                if (word[2] in lettersRate[(currentIndex + 2) % keyLen][3:9]): #r
-                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][4:11]): #d
+                if (word[2] in lettersRate[(currentIndex + 2) % keyLen][2:5]): #r
+                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][5:11]): #d
                         confirmWords[tmp] = word
             currentIndex = currentIndex + 3
         else:
@@ -192,8 +192,8 @@ def possibleDieWord(text, lettersRate, keyLen):
         if len(word) == 3:
             if(word[2] == lettersRate[(currentIndex + 2) % keyLen][0]): #e
                 print word
-                if (word[1] in lettersRate[(currentIndex + 1) % keyLen][2:5]): #i
-                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][3:11]): #d
+                if (word[1] in lettersRate[(currentIndex + 1) % keyLen][3:6]): #i
+                    if (word[0] in lettersRate[(currentIndex + 0)  % keyLen][5:11]): #d
                         confirmWords[tmp] = word
             currentIndex = currentIndex + 3
         else:

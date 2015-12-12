@@ -113,7 +113,7 @@ def decipherGerman(text, keyLen):
     for i in range(keyLen):
         keyLetterRate.append(usualGermanLettersRate)
 
-    text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
+    # text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
     map = algGerman.frequencyAnalysis(text, keyLen)
     offsetArray = calculateOffsetArray(text)
 

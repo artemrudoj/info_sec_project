@@ -12,9 +12,9 @@ import algoritm.englishCrack
 import algoritm.russianCipher
 import algoritm.russian
 import algoritm.tools
-
+import algoritm.germanCrack
 cypherArray = u"dglsobmtsdgmrgkoerjheiorhjakmsldfk"
-russianArray = u"АБ"
+russianArray = u"АБДБИЬФИФБЙЦАЙЦЗАБЦЙЗЩА"
 
 class HomePage(TemplateView):
     template_name = "input.html"
@@ -35,16 +35,16 @@ def get_text(request):
         if 'decrypt' in request.POST:
             print "decrypt"
             newText1 = algoritm.alg.deleteChangeBadSymbols(text)
-            # raw.keyLen = algoritm.algKeyTest.key_count(text)
-            # newKeylen = algoritm.algKey.key_count(text)
-            raw.keyLen.append(2)
-            newKeylen.append(2)
-            if raw.lang == Lang.en:
+            if int(raw.lang) == (Lang.en):
+                raw.keyLen = algoritm.algKeyTest.key_count(text, 1)
                 list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
             elif int(raw.lang) == int(Lang.ru):
+                raw.keyLen = algoritm.algKeyTest.key_count(text, 0)
+                print raw.keyLen
                 list = algoritm.russian.decipherRussian(newText1, raw.keyLen[0])
-            elif raw.lang == Lang.de:
-                list = algoritm.englishCrack.decipherEnglish(newText1, raw.keyLen[0])
+            elif int(raw.lang) == int(Lang.de):
+                # raw.keyLen = algoritm.algKeyTest.key_count(text, 2)
+                list = algoritm.germanCrack.decipherGerman(newText1, 3)
             newText = list[0]
             raw.mappingFunctions = list[1]
         elif 'encrypt' in request.POST:
@@ -55,14 +55,14 @@ def get_text(request):
             print "asdasd"
             if int(raw.lang) == int(Lang.en):
                 print "1"
-                newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
+                newText = algoritm.tools.superEncrytor(newText1, keyLen, algoritm.englishCrack.usualEnglishLettersRate)
             elif int(raw.lang) == int(Lang.ru):
                 print "asdasd"
                 newText1 = algoritm.tools.deleteE(newText1)
-                newText = algoritm.russianCipher.main(newText1, russianArray[0:keyLen])
-            elif raw.lang == Lang.de:
+                newText = algoritm.tools.superEncrytor(newText1, keyLen, algoritm.russian.usualRussianLettersRate)
+            elif int(raw.lang) == int(Lang.de):
                 print "2"
-                newText = algoritm.cipher.main(newText1, cypherArray[0:keyLen])
+                newText = algoritm.tools.superEncrytor(newText1, keyLen, algoritm.germanCrack.usualGermanLettersRate)
         print "22"
         print  raw.keyLen
         raw.text = newText

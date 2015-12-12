@@ -30,9 +30,10 @@ def superEncrytor(text, keyLen, alphabet):
         if letter in alphabet:
             indexInArray = alphabet.index(letter)
             chipherText = chipherText + chipherLetters[index % keyLen][indexInArray]
+            index = index + 1
         else:
             chipherText += letter
-        index = index + 1
+
 
     print(u''.join(chipherText))
     print(chipherLetters)

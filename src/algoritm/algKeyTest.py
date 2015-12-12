@@ -6,16 +6,17 @@ pattern = re.compile("([A-Z])$")
 patternQuots = re.compile("[\"]")
 patternNewLine = re.compile("[\n]")
 
-pattern = re.compile("([-Z])")
+
 
 
 def key_count(cipher, lang):
+    pattern = ""
     if lang == 0:
-        pattern = re.compile("([А-Я])")
+        pattern = re.compile(u"([А-Я])")
     elif lang == 1:
-        pattern = re.compile("([A-Z])")
+        pattern = re.compile(u"([A-Z])")
     elif lang == 2:
-        pattern = re.compile("([A-ZÄÖÜß])")
+        pattern = re.compile(u"([A-ZÄÖÜß])")
     my_final_diff = []
     my_search_word = []
     my_wrd_arr = []

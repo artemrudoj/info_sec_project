@@ -117,7 +117,7 @@ def decipherEnglish(text, keyLen):
     for i in range(keyLen):
         keyLetterRate.append(usualEnglishLettersRate)
 
-    text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
+    # text = frequencyAnalysis(text, keyLen, keyLetterRate, lettetsRate)
     map = algArtem.frequencyAnalysis(text, keyLen)
     offsetArray = calculateOffsetArray(text)
 

@@ -92,6 +92,8 @@ def key_count(cipher, lang):
                             my_factor.append(0)
                         my_factor[i] += 1
     print my_factor
+    if my_factor == []:
+        return []
     first_max = max(my_factor)
     first_max_i = my_factor.index(first_max)
     current_i = first_max_i

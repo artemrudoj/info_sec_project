@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
-
+{% load decriptor_extras %}
 {%  block content %}
             {% for i in rawText.keyLen %}
                 <div class="row">
-                    <textarea class="form-control" rows="15">{{ rawText.text | slice:forloop.counter0 }}</textarea>
+                    <textarea class="form-control" rows="15">{{ rawText.text | index:forloop.counter0 }}</textarea>
                 </div>
                 <p>Period = {{ i }} </p>
-                <p>Count of symbols in the text = {{ rawText.textLen }} </p>
+                <p>Count of symbols in the text = {{ rawText.textLen  }} </p>
 {#                <p>Mapping functions: </p>#}
 {#                {% for i in rawText.mappingFunctions %}#}
 {#                    {% for chiperLetter, normalLetter in i.items %}#}

@@ -3,19 +3,15 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from decriptor.forms import InputTextForm
 from decriptor.models import SourceText, Lang
-import algoritm.cipher
 import algoritm.algArtem
 import algoritm.algKey
 import algoritm.algKeyTest
 import algoritm.englishCrack
-import algoritm.russianCipher
-import algoritm.russian
+import algoritm.russianCrack
 import algoritm.tools
 import algoritm.germanCrack
 from threading import Thread
 N = 4
-cypherArray = u"dglsobmtsdgmrgkoerjheiorhjakmsldfk"
-russianArray = u"АБДБИЬФИФБЙЦАЙЦЗАБЦЙЗЩА"
 
 class HomePage(TemplateView):
     template_name = "input.html"
@@ -59,7 +55,7 @@ def get_text(request):
                 for i in range(len(raw.keyLen)):
                     if i >= N:
                         break
-                    threads[i] = Thread(target=algoritm.russian.decipherRussian, args=(newText1, raw.keyLen[i], results, i))
+                    threads[i] = Thread(target=algoritm.russianCrack.decipherRussian, args=(newText1, raw.keyLen[i], results, i))
                     threads[i].start()
                 # list = algoritm.russian.decipherRussian(newText1, raw.keyLen[0])
             elif int(raw.lang) == int(Lang.de):
@@ -95,7 +91,7 @@ def get_text(request):
                 newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.englishCrack.usualEnglishLettersRate))
             elif int(raw.lang) == int(Lang.ru):
                 newText1 = algoritm.tools.deleteE(newText1)
-                newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.russian.usualRussianLettersRate))
+                newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.russianCrack.usualRussianLettersRate))
             elif int(raw.lang) == int(Lang.de):
                 newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.germanCrack.usualGermanLettersRate))
         print  raw.keyLen

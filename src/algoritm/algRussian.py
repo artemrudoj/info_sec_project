@@ -171,41 +171,6 @@ def possibleNeWord(text, lettersRate, keyLen):
     print confirmWords
     return confirmWords
 
-
-def searchInArrayOfChar(c, array, begin, end):
-    for i in range(begin,end,1):
-        if (c == array[i]):
-            return i
-    return  None
-
-def possibleAWord(text, lettersRate, keyLen):
-    currentIndex = 0
-    confirmWords = {}
-    tmp = 0
-    for word in re.split(u"[^A-Z]+",text):
-        tmp = currentIndex
-        if len(word) == 1:
-            if (word[0] in lettersRate[currentIndex % keyLen][1:5]):
-                confirmWords[tmp] = word
-            currentIndex = currentIndex + 1
-        else:
-            currentIndex = currentIndex + len(word)
-    return confirmWords
-
-def formMappingTheAndA(possibleWord, confirmWords, keyLen, aWords):
-    mappigFunctions = [{}] * keyLen
-    for key, value in confirmWords.iteritems():
-        for i in range(len(possibleWord)):
-            if possibleWord[i] not in mappigFunctions[(key + i ) % keyLen]:
-                mappigFunctions[(key + i ) % keyLen][possibleWord[i]] = ord(value[i])
-            else:
-                if mappigFunctions[(key + i ) % keyLen][possibleWord[i]] != ord(value[i]):
-                    print mappigFunctions
-                    print "ERROR in possible word " + possibleWord + ":" + value + ":"+ str(unichr(mappigFunctions[(key + i ) % keyLen][possibleWord[i]]))
-    print mappigFunctions
-    return mappigFunctions
-
-
 def performPossibleChtoAndKakAndNe(text, chtoWords, kakWords, neWords, keyLen, lettersRate):
     print u"Freq analys Words"
     mappingFunctioons = [{} for i in range(keyLen)]
@@ -242,11 +207,6 @@ def performPossibleChtoAndKakAndNe(text, chtoWords, kakWords, neWords, keyLen, l
     return mappingFunctioons
 
 
-def foundKeyByValue(dict, value):
-    for key in dict.keys():
-        if dict[key] == value:
-            return key
-
 def frequencyAnalysisWords(aWord, keyLen):
     words =  [{} for i in range(keyLen)]
     for key, value in aWord.iteritems():
@@ -260,98 +220,6 @@ def frequencyAnalysisWords(aWord, keyLen):
         #FIXME
         words[i] = sorted(words[i].items(), key=operator.itemgetter(1), reverse=True)
     return  words
-
-
-
-def isCorrectWordWithRequired(word, arrayOfLetters, requiredLetters):
-    HaveRequredLettersCount = 0
-    if (len(word) > 4):
-        return False
-    for letter in word:
-        if letter in arrayOfLetters:
-            if letter in requiredLetters:
-                HaveRequredLettersCount = HaveRequredLettersCount + 1
-            continue
-        else:
-            return False
-    if (HaveRequredLettersCount >= 2):
-        return True
-    else:
-        return False
-
-
-def checkFullnessOfLettersArray(newLettersRate, confirmWords):
-    array = "".join(confirmWords)
-    array2 = ''.join(sorted(array))
-    newarray = ''.join(OrderedDict.fromkeys(array2))
-    array = "".join(newLettersRate)
-    newarray2 = ''.join(sorted(array))
-    newarray3 = ''.join(OrderedDict.fromkeys(newarray2))
-    print "old:"
-    print newarray
-    print "new:"
-    print newarray3
-
-
-def fromListToMap(map):
-    newMap  = {}
-    for a in map:
-        indx = ord(a[0])
-        newMap[indx] = a[1]
-    return newMap
-
-
-def isCorrectWord(word, letters):
-    for letter in word:
-        if letter in letters:
-            continue
-        else:
-            return False
-    return True
-
-# returns true if  currenIndex lessthan endIndex and false otherwise
-def compareComplexIndexes(currentIndex, endIndex):
-    for i in range(len(currentIndex)):
-        if currentIndex[i] > endIndex[i]:
-            return False
-
-    return True
-
-
-
-def increaseComplexIndex(currentIndex, endIndex, permanentIndex):
-    firstVarLetterIndex = -1
-    for i in range(len(permanentIndex)):
-        if permanentIndex[i] == -1:
-            firstVarLetterIndex = i
-            break
-
-
-    if firstVarLetterIndex == -1:
-        currentIndex = endIndex[:]
-        currentIndex[0] = endIndex[0] + 1
-        return currentIndex
-    else:
-        secondVarLetterIndex = permanentIndex.__len__() - 1
-        for i in range(firstVarLetterIndex + 1, len(permanentIndex)):
-             if permanentIndex[i] == -1:
-                secondVarLetterIndex = i
-                break
-
-    currentIndex[secondVarLetterIndex] += 1
-
-    for i in range(len(currentIndex) - 1):
-        if currentIndex[i] > endIndex[i]:
-            currentIndex[i] -= 2 * frequentAnalysisError - 1
-            if currentIndex[i] < 0:
-                currentIndex[i] = 0
-            # currentIndex[i + 1] += 1
-            for j in range(i + 1, permanentIndex.__len__()):
-                if permanentIndex[j] == -1:
-                    currentIndex[j] += 1
-                    break
-    return currentIndex
-
 
 
 # if __name__ == '__main__':

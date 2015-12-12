@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^$', HomePage.as_view(), name='home'),
     url(r'^decripted/$', get_text, name='result'),
+    url(r'^.*', HomePage.as_view(), name='home'),
 ]

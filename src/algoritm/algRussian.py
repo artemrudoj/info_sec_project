@@ -66,7 +66,8 @@ def frequencyAnalysis(cipher, keyLen):
     #ДАНЯ переписать
     chtoWords = possibleChtoWord(cipher,arrayOfletters,keyLen)
     kakWords = possibleKakWord(cipher, arrayOfletters, keyLen)
-    neWords = possibleNeWord(cipher, arrayOfletters, keyLen)
+    # neWords = possibleNeWord(cipher, arrayOfletters, keyLen)
+    neWords =[]
     mapiingFunction = performPossibleChtoAndKakAndNe(cipher, chtoWords, kakWords, neWords, keyLen, arrayOfletters)
     # formMappingTheAndA("THE", confirmWords, keyLen, aWords)
     # #считаем , что букву е мы знаем
@@ -215,9 +216,9 @@ def performPossibleChtoAndKakAndNe(text, chtoWords, kakWords, neWords, keyLen, l
     print u"Как:"
     a2 = frequencyAnalysisWords(kakWords, keyLen)
     print a2
-    print u"Не:"
-    a3 = frequencyAnalysisWords(neWords, keyLen)
-    print a3
+    # print u"Не:"
+    # a3 = frequencyAnalysisWords(neWords, keyLen)
+    # print a3
 
     for i in range(keyLen):
         # переписать
@@ -233,10 +234,10 @@ def performPossibleChtoAndKakAndNe(text, chtoWords, kakWords, neWords, keyLen, l
 
             mappingFunctioons[(i + 1) % keyLen].update({ord(a2[i][0][0][1]):u"А"})
 
-        if (a3[i] != []):
-            mappingFunctioons[(i + 0) % keyLen].update({ord(a3[i][0][0][0]):u"Н"})
-
-            mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"Е"})
+        # if (a3[i] != []):
+        #     mappingFunctioons[(i + 0) % keyLen].update({ord(a3[i][0][0][0]):u"Н"})
+        #
+        #     mappingFunctioons[(i + 1) % keyLen].update({ord(a3[i][0][0][1]):u"Е"})
 
     return mappingFunctioons
 

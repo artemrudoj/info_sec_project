@@ -5,8 +5,10 @@
                 <div class="row">
                     <textarea class="form-control" rows="15">{{ rawText.text | index:forloop.counter0 }}</textarea>
                 </div>
-                <p>Period = {{ i }} </p>
-                <p>Count of symbols in the text = {{ rawText.textLen  }} </p>
+                <p><strong>Period = {{ i }} </strong></p>
+                <p><strong>Count of symbols in the text = {{ rawText.textLen  }} </strong></p>
+                <hr>
+                <hr>
 {#                <p>Mapping functions: </p>#}
 {#                {% for i in rawText.mappingFunctions %}#}
 {#                    {% for chiperLetter, normalLetter in i.items %}#}

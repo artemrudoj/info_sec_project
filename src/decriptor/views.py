@@ -3,7 +3,6 @@ from django.views.generic import TemplateView
 from django.shortcuts import render
 from decriptor.forms import InputTextForm
 from decriptor.models import SourceText, Lang
-import algoritm.alg
 import algoritm.cipher
 import algoritm.algArtem
 import algoritm.algKey
@@ -38,7 +37,7 @@ def get_text(request):
         newKeylen = []
         if 'decrypt' in request.POST:
             print "decrypt"
-            newText1 = algoritm.alg.deleteChangeBadSymbols(text)
+            newText1 = algoritm.tools.deleteChangeBadSymbols(text)
             if int(raw.lang) == (Lang.en):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 1)
                 for i in range(raw.keyLen):
@@ -80,7 +79,7 @@ def get_text(request):
             raw.mappingFunctions = list[1]
         elif 'encrypt' in request.POST:
             print  "encrypt"
-            newText1 = algoritm.alg.deleteChangeBadSymbols(text)
+            newText1 = algoritm.tools.deleteChangeBadSymbols(text)
             keyLen = int(form.cleaned_data['keyLen'])
             raw.keyLen.append(keyLen)
             print "asdasd"

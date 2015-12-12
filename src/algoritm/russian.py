@@ -105,7 +105,7 @@ def suggest(letterList, starIndex):
     return candidates
 
 
-def decipherRussian(text, keyLen):
+def decipherRussian(text, keyLen, results, threadId):
     start = time.time()
 
     lettetsRate = calculateLettersRate(text, keyLen)
@@ -192,6 +192,7 @@ def decipherRussian(text, keyLen):
     answerList.append(text4)
     answerList.append(map)
     answerList.append(performingTime)
+    results[threadId] = answerList
     return answerList
 
 if __name__ == '__main__':

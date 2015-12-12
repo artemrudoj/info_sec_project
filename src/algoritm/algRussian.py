@@ -258,7 +258,6 @@ def frequencyAnalysisWords(aWord, keyLen):
     for i in range(keyLen):
         #FIXME
         words[i] = sorted(words[i].items(), key=operator.itemgetter(1), reverse=True)
-        print str(i) + ": " + smart_str(words[i][0][0])
     return  words
 
 

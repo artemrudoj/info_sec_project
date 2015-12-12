@@ -43,7 +43,7 @@ def get_text(request):
                 print raw.keyLen
                 if (raw.keyLen >= N):
                     raw.keyLen = raw.keyLen[0:N-1]
-                    raw.keyLen.append(1)
+                raw.keyLen.append(1)
                 for i in range(len(raw.keyLen)):
                     if i >= N:
                         break
@@ -55,7 +55,7 @@ def get_text(request):
                 print raw.keyLen
                 if (raw.keyLen >= N):
                     raw.keyLen = raw.keyLen[0:N-1]
-                    raw.keyLen.append(1)
+                raw.keyLen.append(1)
                 for i in range(len(raw.keyLen)):
                     if i >= N:
                         break
@@ -66,7 +66,7 @@ def get_text(request):
                 raw.keyLen = algoritm.algKeyTest.key_count(text, 2)
                 if (raw.keyLen >= N):
                     raw.keyLen = raw.keyLen[0:N-1]
-                    raw.keyLen.append(1)
+                raw.keyLen.append(1)
                 for i in range(len(raw.keyLen)):
                     if i >= N:
                         break
@@ -95,7 +95,7 @@ def get_text(request):
                 newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.englishCrack.usualEnglishLettersRate))
             elif int(raw.lang) == int(Lang.ru):
                 newText1 = algoritm.tools.deleteE(newText1)
-                newText = algoritm.tools.superEncrytor(newText1, keyLen, algoritm.russian.usualRussianLettersRate)
+                newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.russian.usualRussianLettersRate))
             elif int(raw.lang) == int(Lang.de):
                 newText.append(algoritm.tools.superEncrytor(newText1, keyLen, algoritm.germanCrack.usualGermanLettersRate))
         print  raw.keyLen
